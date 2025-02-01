@@ -1,0 +1,339 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                      Int       @id @default(autoincrement())
+  email                   String?   @unique
+  password                String?
+  name                    String?
+  role                    String?
+  imageUrl                String?   // Adding image URL for the user profile picture
+  phoneno                 String?
+  city                    String?
+  balance                 Float?
+  status                  Int?
+  verificationToken  String?  @unique
+  verificationTokenExpires DateTime? // Field to store token expiration
+  emailVerified           Boolean   @default(false) // Field to store verification status
+  resetToken              String?   @unique
+  resetTokenExpires       DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+}
+
+
+model Category {
+  id               Int           @id @default(autoincrement())
+  name             String
+  slug             String         @unique // Slug field to store the unique URL-friendly name
+  imageUrl         String?
+  subcategories    Subcategory[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
+}
+
+
+model Subcategory {
+  id               Int          @id @default(autoincrement())
+  name             String
+  slug             String        @unique // Add slug field for SEO-friendly URLs
+  imageUrl         String?  
+  categoryId       Int
+  category         Category     @relation(fields: [categoryId], references: [id])
+  products         Product[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  // SEO fields
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
+}
+
+
+model Size {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+}
+
+model Color {
+  id   Int    @id @default(autoincrement())
+  name String
+  hex  String?
+}
+
+
+
+model Product {
+  id              Int          @id @default(autoincrement())
+  name            String
+  slug            String       @unique  // Adding slug field with uniqueness constraint
+  description     String
+  discount        Float?
+  isTopRated      Boolean?
+  price           Float
+  stock           Int
+  subcategorySlug String        // Change from subcategoryId to subcategorySlug
+  subcategory     Subcategory   @relation(fields: [subcategorySlug], references: [slug]) // Reference by slug
+  images          Image[]      // Relation to images
+  colors          Json?        // Making colors optional
+  sizes           Json?        // Making sizes optional
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  orderItems      OrderItem[]
+  reviews         Review[]
+
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
+  sku              String?
+}
+
+
+model Image {
+  id         Int       @id @default(autoincrement())
+  url        String
+  productId  Int
+  product    Product   @relation(fields: [productId], references: [id])
+  createdAt  DateTime  @default(now())
+}
+model Coupon {
+  id          Int       @id @default(autoincrement())
+  code        String    @unique
+  discount    Float     // Discount percentage
+  expiration  DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+
+model Order {
+  id               Int          @id @default(autoincrement())
+  userId           Int?
+  total            Float
+  discount         Float        @default(0.0)
+  tax              Float        @default(0.0)
+  deliveryCharge   Float        @default(0.0)  // Add deliveryCharge
+  extraDeliveryCharge Float     @default(0.0)  // Add extraDeliveryCharge
+  netTotal         Float
+  status           OrderStatus
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  recipientName    String
+  streetAddress    String?
+  apartmentSuite   String?
+  city             String
+  state            String
+  zip              String
+  country          String
+  phoneNumber      String
+  email            String
+  paymentMethod    String
+  paymentInfo      Json?
+  orderItems       OrderItem[]
+  couponCode       String?
+  shippingMethod   String?
+  shippingTerms    String?
+  shipmentDate     DateTime?
+  deliveryDate     DateTime?
+}
+
+
+
+
+model OrderItem {
+  id            Int      @id @default(autoincrement())
+  orderId       Int
+  productId     Int
+  quantity      Int
+  price         Float
+  selectedSize  String?  // Optional field for the selected size
+  selectedColor String?  // Optional field for the selected color
+  order         Order    @relation(fields: [orderId], references: [id])
+  product       Product  @relation(fields: [productId], references: [id])
+}
+
+model Settings {
+  id             Int      @id @default(autoincrement())
+  deliveryCharge Float
+  taxPercentage  Float
+  other1         Float    @default(0)
+  other2         Float    @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Slider {
+  id      Int    @id @default(autoincrement())
+  imgurl  String
+  link    String
+
+}
+
+model SocialMedia {
+  id        Int      @id @default(autoincrement())
+  facebook  String?  // URL for Facebook
+  instagram String?  // URL for Instagram
+  twitter   String?  // URL for Twitter
+  tiktok    String?  // URL for TikTok
+  pinterest String?  // URL for Pinterest
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model FacebookPixel {
+  id        Int      @id @default(autoincrement())
+  pixelCode String
+  pixelId   String?   // Make sure this field is not required unless you're providing it
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Blogcategories {
+  id          Int      @id @default(autoincrement())
+  title       String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Blog {
+  id                Int      @id @default(autoincrement())
+  title             String
+  description       String   @db.Text
+  image             String
+  category          String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  meta_description  String?
+  meta_title        String?
+  meta_focusKeyword String?
+  web_slug          String?
+}
+
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+  PAYMENTFAILED
+}
+
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  reviewer  String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    String   @default("pending") 
+}
+
+
+
+model ContactInfo{
+  id        Int      @id @default(autoincrement())
+  phoneNumber  String
+  email         String
+  address       String
+  website       String
+  owner         String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CompanyDetails{
+  id        Int       @id @default(autoincrement())
+  name      String
+  description   String
+  headerImage     String
+  favIcon         String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PrivacyPolicy{
+  id        Int       @id @default(autoincrement())
+  Title      String
+  description   String
+  Text     String     @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TermAndConditions{
+  id        Int       @id @default(autoincrement())
+  Title      String
+  description   String
+  Text     String     @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model ShippingPolicy{
+  id        Int       @id @default(autoincrement())
+  Title      String
+  description   String
+  Text     String     @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model ReturnAndExchangePolicy{
+  id        Int       @id @default(autoincrement())
+  Title      String
+  description   String
+  Text     String     @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AboutUs{
+  id        Int       @id @default(autoincrement())
+  Title      String
+  description   String
+  Text     String     @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactUs{
+  id        Int       @id @default(autoincrement())
+  Title      String
+  description   String
+  Text     String     @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Faq{
+  id        Int       @id @default(autoincrement())
+  question      String
+  answer   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
