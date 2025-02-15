@@ -28,10 +28,6 @@ export default function CustomerPage () {
       <TopCategories/>
         <AllProducts/>
         {/* <CategoryProductsComponent/> */}
-       
-        
-        
-        
         <Products/>
         <Features/>
         <NewArrivals/>
