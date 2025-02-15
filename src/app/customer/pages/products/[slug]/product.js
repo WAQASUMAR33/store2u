@@ -43,6 +43,11 @@ const ProductPage = ({ productData }) => {
   const handlelinkshare = () => {
     setLinkShare(!linkshare);
   };
+  
+  useEffect(()=>{
+    console.log("Colors :",colors);
+    console.log("Sizes :",sizes);
+  },[colors,sizes]);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(ProductLink);
@@ -54,12 +59,13 @@ const ProductPage = ({ productData }) => {
     const fetchProduct = async () => {
       try {
         setLoading(true); // Start loading when fetching starts
-        const response = await axios.get(`/api/products?slug=${product.slug}`);
+        const response = await axios.get(`/api/products/${product.slug}`);
         const fetchedata = response.data;
-        const { product: fetchedProduct, relatedProducts } = fetchedata.data;
+        const { product: fetchedProduct, relatedProducts,colors,sizes } = fetchedata.data;
 
-        setSizes(JSON.parse(fetchedProduct.sizes || '[]'));
-        setColors(JSON.parse(fetchedProduct.colors || '[]'));
+        console.log("Fetched234 data is  ",fetchedata)
+        setSizes(sizes|| '[]');
+        setColors(colors || '[]');
         setProduct(fetchedProduct);
         setRelatedProducts(relatedProducts);
       } catch (error) {
@@ -491,13 +497,13 @@ const ProductPage = ({ productData }) => {
                 {colors.map((color, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedColor(color.label)}
-                    className={`w-8 h-8 rounded-full border-2 cursor-pointer ${selectedColor === color.label ? 'border-black' : 'border-gray-300'
+                    onClick={() => setSelectedColor(color.name)}
+                    className={`w-8 h-8 rounded-full border-2 cursor-pointer ${selectedColor === color.name ? 'border-black' : 'border-gray-300'
                       }`}
                     style={{ backgroundColor: color.hex }}
-                    title={color.label}
+                    title={color.name}
                   >
-                    <span className="sr-only">{color.label}</span>
+                    <span className="sr-only">{color.name}</span>
                   </button>
                 ))}
               </div>
@@ -517,13 +523,13 @@ const ProductPage = ({ productData }) => {
                 {sizes.map((size, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedSize(size.label)}
+                    onClick={() => setSelectedSize(size.name)}
                     disabled={size.stock === 0}
                     className={`w-10 h-10 border text-center flex items-center justify-center cursor-pointer
-                      ${selectedSize === size.label ? 'border-black border-[2px]' : 'border-gray-300'} 
+                      ${selectedSize === size.name ? 'border-black border-[2px]' : 'border-gray-300'} 
                       ${size.stock === 0 ? 'line-through cursor-not-allowed text-gray-400' : 'hover:border-black'}`}
                   >
-                    {size.label}
+                    {size.name}
                   </button>
                 ))}
               </div>

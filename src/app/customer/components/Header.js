@@ -34,8 +34,11 @@ const Header = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
-const totalQuantityOfItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-
+  const [totalQuantityOfItems, setTotalQuantityOfItems] = useState(0);
+  if(cartItems.length>0){
+    const totalQuantityOfItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+    setTotalQuantityOfItems(totalQuantityOfItems);
+  }
 
   console.log("All cart items are: ",cartItems);
   // Refs for dropdowns

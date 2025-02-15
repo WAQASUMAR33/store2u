@@ -203,7 +203,7 @@ const AddProductPageContent = () => {
 
     try {
       // Check for existing product with the same slug
-      const existingProductResponse = await fetch(`/api/products?slug=${newProduct.slug}`);
+      const existingProductResponse = await fetch(`/api/products/${newProduct.slug}`);
       const existingData = await existingProductResponse.json();
 
       if (existingData.status === false) {

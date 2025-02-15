@@ -85,10 +85,10 @@ export async function GET(request, { params }) {
     const product = await prisma.product.findUnique({
       where: { slug },
       include: {
-        images: true, // Include related images
+        images: true,
         subcategory: {
           include: {
-            category: true, // Include related category if needed
+            category: true,
           },
         },
       },
@@ -101,6 +101,30 @@ export async function GET(request, { params }) {
       );
     }
 
+    // Parse colors and sizes from JSON strings
+    const colorIds = JSON.parse(product.colors || '[]');
+    const sizeIds = JSON.parse(product.sizes || '[]');
+
+    // Fetch color and size details
+    const colors = await prisma.color.findMany({
+      where: {
+        id: { in: colorIds },
+      },
+      select: {
+        name: true,
+        hex: true,
+      },
+    });
+
+    const sizes = await prisma.size.findMany({
+      where: {
+        id: { in: sizeIds },
+      },
+      select: {
+        name: true,
+      },
+    });
+
     // Fetch related products (customize the logic as needed)
     const relatedProducts = await prisma.product.findMany({
       where: {
@@ -112,9 +136,16 @@ export async function GET(request, { params }) {
         images: true,
       },
     });
-console.log("data fetched from api is :",product);
+
     return NextResponse.json(
-      { data: { product, relatedProducts } },
+      {
+        data: {
+          product,
+          colors,
+          sizes,
+          relatedProducts,
+        },
+      },
       { status: 200 }
     );
   } catch (error) {
@@ -125,7 +156,6 @@ console.log("data fetched from api is :",product);
     );
   }
 }
-
 
 
 export async function DELETE(request, { params }) {

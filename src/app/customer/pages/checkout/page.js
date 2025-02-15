@@ -345,6 +345,7 @@ const CheckoutPage = () => {
 
       console.log('API Response:', response.data);
 
+      if(paymentMethod=== 'Credit Card'){
       console.log("order id is ", response.data.data.id);
       console.log("Total amount is ", response.data.data.total);
       const orderID = response.data.data.id;
@@ -372,28 +373,34 @@ const CheckoutPage = () => {
 
         document.body.appendChild(form);
         form.submit();
-
-        // setIsModalOpen(true);
-        // localStorage.removeItem('cart'); // Clear the cart from localStorage
-        setCart([]); // Reset cart state
-
-        // // Send order confirmation email
-        // await sendOrderConfirmation(
-        //   shippingAddress.email, // Email to send to
-        //   shippingAddress.recipientName, // Customer's name
-        //   response.data.data.id, // Use order ID from backend response
-        //   calculatedTotal, // Total amount
-        //   orderItems, // Ordered items
-        //   shippingAddress, // Shipping address details
-        //   effectiveDeliveryCharge, // Delivery charge
-        //   effectiveCodCharge // Extra delivery charge for COD
-        // );
-
         toast.success('Redirecting to payment gateway!');
-      } else {
+      }else {
         console.error('API Error:', response.data);
         toast.error('Failed to place order. Please try again.');
       }
+      }
+      else{
+        setIsModalOpen(true);
+        localStorage.removeItem('cart'); // Clear the cart from localStorage
+        setCart([]); // Reset cart state
+
+        // Send order confirmation email
+        await sendOrderConfirmation(
+          shippingAddress.email, // Email to send to
+          shippingAddress.recipientName, // Customer's name
+          response.data.data.id, // Use order ID from backend response
+          calculatedTotal, // Total amount
+          orderItems, // Ordered items
+          shippingAddress, // Shipping address details
+          effectiveDeliveryCharge, // Delivery charge
+          effectiveCodCharge // Extra delivery charge for COD
+        );
+        toast.success('Order placed Successfully!');
+      }
+      
+
+        
+      
     } catch (error) {
       console.error('Error placing order:', error); // Log the error
       toast.error('Failed to place order. Please try again.');
