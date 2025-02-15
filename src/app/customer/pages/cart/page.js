@@ -129,10 +129,10 @@ const CartPage = () => {
            src="/shipping-icon.png" alt="Shipping Icon" className="h-14 w-17 pl-4" />
               <div>
                 <p className="text-lg font-semibold pl-4 pt-4 text-gray-800">
-                  Shipping, arrives today, Sep 2
+                  Shipping, arrives within 5 Days
                 </p>
                 <p className="text-md pl-4 text-gray-600">
-                  Order within <span className="font-bold">5 hr 33 min</span>
+                  Order within <span className="font-bold">5 Days</span>
                 </p>
                 <p className="text-md pl-4 text-blue-600 underline cursor-pointer">95829</p> {/* Example ZIP code */}
               </div>
