@@ -134,7 +134,7 @@ const CartPage = () => {
                 <p className="text-md pl-4 text-gray-600">
                   Order within <span className="font-bold">5 Days</span>
                 </p>
-                <p className="text-md pl-4 text-blue-600 underline cursor-pointer">95829</p> {/* Example ZIP code */}
+               
               </div>
             </div>
           </div>
@@ -153,7 +153,7 @@ const CartPage = () => {
           
                     src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${item.images[0].url}`}
                     alt={item.name}
-                    className="h-20 w-20 object-cover rounded mr-4 "
+                    className="h-20 w-18 object-cover rounded mr-4 "
                   />
                 ) : (
                   <div className="h-16 w-16 bg-gray-200 rounded flex items-center justify-center text-gray-500 mr-4">
@@ -213,13 +213,13 @@ const CartPage = () => {
   <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col gap-2">
     <div className='flex gap-2'>
     <a
-      className="bg-green-500 text-white py-2 px-4 rounded-full w-full text-lg font-semibold flex justify-center items-center"
+      className="bg-green-500 text-white py-2 px-4 rounded-full w-full text-md font-semibold flex justify-center items-center"
       href='/'
     >
       Continue Shopping
     </a>
       <button
-      className="bg-blue-500 text-white py-2 px-4 rounded-full w-full text-lg font-semibold"
+      className="bg-blue-500 text-white py-2 px-4 rounded-full w-full text-md font-semibold"
       onClick={handleCheckout}
     >
       Continue to checkout
