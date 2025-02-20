@@ -260,12 +260,12 @@ const UserOrders = () => {
                       </div>
                       <div className="flex justify-between">
                         <p className="text-md font-medium text-gray-700">Shipment Date:</p>
-                        <p className="text-md text-gray-700">{selectedOrder.shipmentDate}</p>
+                        <p className="text-md text-gray-700">{new Date(selectedOrder.shipmentDate).toLocaleDateString()}</p>
                       </div>
                       <hr className="my-2" />
                       <div className="flex justify-between mt-4">
                         <p className="text-xl font-bold text-gray-700">Delivery Date:</p>
-                        <p className="text-xl text-gray-700">Rs.{selectedOrder.deliveryDate}</p>
+                        <p className="text-xl text-gray-700">{new Date(selectedOrder.deliveryDate).toLocaleDateString()}</p>
                       </div>
 
 
