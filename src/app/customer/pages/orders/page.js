@@ -246,6 +246,30 @@ const UserOrders = () => {
                         <p className="text-xl font-bold text-gray-700">Total:</p>
                         <p className="text-xl text-gray-700">Rs.{total.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
                       </div>
+
+
+                      <h3 className="font-semibold mt-4">Shipping Details:</h3>
+
+                      <div className="flex justify-between">
+                        <p className="text-md font-medium text-gray-700">Shipping Method:</p>
+                        <p className="text-xl text-gray-700">{selectedOrder.shippingMethod}</p>
+                      </div>
+                      <div className="flex justify-between">
+                        <p className="text-md font-medium text-gray-700">Shipping Details::</p>
+                        <p className="text-md text-gray-700">{selectedOrder.shippingTerms }</p>
+                      </div>
+                      <div className="flex justify-between">
+                        <p className="text-md font-medium text-gray-700">Shipment Date:</p>
+                        <p className="text-md text-gray-700">{selectedOrder.shipmentDate}</p>
+                      </div>
+                      <hr className="my-2" />
+                      <div className="flex justify-between mt-4">
+                        <p className="text-xl font-bold text-gray-700">Delivery Date:</p>
+                        <p className="text-xl text-gray-700">Rs.{selectedOrder.deliveryDate}</p>
+                      </div>
+
+
+
                     </>
                   );
                 })()}
