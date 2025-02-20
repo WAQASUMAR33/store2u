@@ -43,8 +43,7 @@ function Slider() {
           setcompanyName(data.name);
           setcompanyHeaderImage(data.headerImage);
           setcompanyicon(data.favIcon);
-          console.log("Company data is ",company);
-         
+          console.log("Company data is ",company);    
         }
       } catch (error) {
         console.error('Error fetching company details:', error);
@@ -52,8 +51,11 @@ function Slider() {
     }
     fetchCompanyDetails();
   }, []);
+
+
+  
   return (
-    <div className="relative slide-container bg-white text-black h-[500px] md:h-[500px] lg:h-[600px]">
+    <div className="relative slide-container bg-white text-black h-[500px] md:h-[500px] lg:h-[700px]">
       <Zoom scale={0.4} duration={2000} autoPlay={true}>
         {slides.map((slide, index) => (
           <div key={index} className="relative h-full">

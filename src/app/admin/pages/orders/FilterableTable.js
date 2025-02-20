@@ -20,6 +20,35 @@ const FilterableTable = ({ data = [], fetchData }) => {  // Ensure data defaults
 
   const router = useRouter();
 
+  // useEffect(() => {
+  //   if (Array.isArray(data)) {  // Check if data is an array
+  //     setFilteredData(
+  //       data
+  //         .filter((item) =>
+  //           Object.values(item).some((val) =>
+  //             String(val).toLowerCase().includes(filter.toLowerCase())
+  //           )
+  //         )
+  //         .sort((a, b) => {
+  //           // Define the order with pending on top and cancelled/completed at the bottom
+  //           const statusOrder = ['PENDING','SHIPPED', 'PAID',   'CANCELLED','COMPLETED'];
+            
+  //           // Compare based on the status order
+  //           const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+  
+  //           if (statusComparison !== 0) {
+  //             return statusComparison; // Sort by status if statuses are different
+  //           }
+  
+  //           // For the same status, sort by updatedAt (latest orders first)
+  //           return new Date(b.updatedAt) - new Date(a.updatedAt);
+  //         }
+  //       )
+  //     );
+  //   }
+  // }, [filter, data]);
+
+
   useEffect(() => {
     if (Array.isArray(data)) {  // Check if data is an array
       setFilteredData(
@@ -29,20 +58,7 @@ const FilterableTable = ({ data = [], fetchData }) => {  // Ensure data defaults
               String(val).toLowerCase().includes(filter.toLowerCase())
             )
           )
-          .sort((a, b) => {
-            // Define the order with pending on top and cancelled/completed at the bottom
-            const statusOrder = ['PENDING','SHIPPED', 'PAID',   'CANCELLED','COMPLETED'];
-            
-            // Compare based on the status order
-            const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
-  
-            if (statusComparison !== 0) {
-              return statusComparison; // Sort by status if statuses are different
-            }
-  
-            // For the same status, sort by updatedAt (latest orders first)
-            return new Date(b.updatedAt) - new Date(a.updatedAt);
-          })
+          .sort((a, b) => b.id - a.id) // Sort by id in descending order
       );
     }
   }, [filter, data]);

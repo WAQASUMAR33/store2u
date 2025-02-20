@@ -57,6 +57,7 @@ const AdminOrdersPage = () => {
     setError(null);
     try {
       const response = await axios.post('/api/shipping', {
+        email:order.email,
         orderId: order.id,
         shippingMethod: order.shippingMethod,
         shippingTerms: order.shippingTerms,
@@ -150,7 +151,7 @@ const total = subtotalLessDiscount + totalTax + (order.deliveryCharge ?? 0) + (o
                   />
                 </div>
                 <div>
-                  <label htmlFor="shippingTerms" className="block text-sm font-medium text-gray-700">Shipping Terms</label>
+                  <label htmlFor="shippingTerms" className="block text-sm font-medium text-gray-700">Shipping Details</label>
                   <input
                     type="text"
                     id="shippingTerms"
@@ -162,12 +163,19 @@ const total = subtotalLessDiscount + totalTax + (order.deliveryCharge ?? 0) + (o
                 <div>
                   <label htmlFor="shipmentDate" className="block text-sm font-medium text-gray-700">Shipment Date</label>
                   <input
-                    type="date"
-                    id="shipmentDate"
-                    value={new Date(order.shipmentDate).toISOString().substr(0, 10)}
-                    onChange={(e) => setOrder(prevOrder => ({ ...prevOrder, shipmentDate: e.target.value }))}
-                    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                      type="date"
+                      id="shipmentDate"
+                      value={new Date(order.shipmentDate).toISOString().substr(0, 10)}
+                      min={new Date().toISOString().split("T")[0]} // Set min date as today
+                      onChange={(e) =>
+                        setOrder((prevOrder) => ({
+                          ...prevOrder,
+                          shipmentDate: e.target.value,
+                        }))
+                      }
+                      className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onKeyDown={(e) => e.preventDefault()} // Prevent manual editing
+                    />
                 </div>
                 <div>
                   <label htmlFor="deliveryDate" className="block text-sm font-medium text-gray-700">Delivery Date</label>
@@ -175,8 +183,15 @@ const total = subtotalLessDiscount + totalTax + (order.deliveryCharge ?? 0) + (o
                     type="date"
                     id="deliveryDate"
                     value={new Date(order.deliveryDate).toISOString().substr(0, 10)}
-                    onChange={(e) => setOrder(prevOrder => ({ ...prevOrder, deliveryDate: e.target.value }))}
+                    min={new Date().toISOString().split("T")[0]} // Set min date as today
+                    onChange={(e) =>
+                      setOrder((prevOrder) => ({
+                        ...prevOrder,
+                        deliveryDate: e.target.value,
+                      }))
+                    }
                     className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onKeyDown={(e) => e.preventDefault()} // Prevent manual editing
                   />
                 </div>
               </div>

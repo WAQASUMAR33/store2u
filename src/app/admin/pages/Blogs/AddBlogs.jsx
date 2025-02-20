@@ -173,7 +173,7 @@ const AddBlogs = () => {
     try {
       const imageBase64 = await convertToBase64(formData.image);
       const uploadedImageUrl = await uploadImageToExternalAPI(imageBase64);
-
+      console.log(imageBase64);
       // Prepare the blog data to submit
       const blogToSubmit = {
         ...formData,

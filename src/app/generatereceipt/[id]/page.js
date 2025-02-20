@@ -22,7 +22,7 @@ export default function Invoice({ params }) {
             try {
                 setLoading(true);
                 const response = await axios.get(
-                    `https://sandbox.bankalfalah.com/HS/api/IPN/OrderStatus/28951/040748/${id}`
+                    `https://payments.bankalfalah.com/HS/api/IPN/OrderStatus/28951/040748/${id}`
                 );
 
                 let responseData = response.data;
@@ -177,7 +177,7 @@ export default function Invoice({ params }) {
             <div className="h-screen flex flex-col justify-center items-center">
                 <h1 className="text-4xl font-bold text-red-600 flex items-center gap-2">
                     <MdDangerous />
-                    Payment is not initiated for your order
+                    Payment is  initiated for your order
                 </h1>
             </div>
         );
