@@ -1,8 +1,8 @@
-'use client';
-import { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // MUI Imports
 import {
@@ -18,7 +18,7 @@ import {
   AccordionDetails,
   Typography,
   Divider,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Home as HomeIcon,
   People as PeopleIcon,
@@ -37,7 +37,7 @@ import {
   Phone as PhoneIcon,
   Store as StoreIcon,
   Description as DescriptionIcon,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 
 const Sidebar = ({ setActiveComponent }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState({
@@ -59,9 +59,9 @@ const Sidebar = ({ setActiveComponent }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get('token') || localStorage.getItem('token');
+    const token = Cookies.get("token") || localStorage.getItem("token");
     if (!token) {
-      router.push('/admin');
+      router.push("/admin");
     }
   }, [router]);
 
@@ -73,10 +73,10 @@ const Sidebar = ({ setActiveComponent }) => {
   };
 
   const handleLogout = () => {
-    Cookies.remove('token');
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    window.location.href = '/admin';
+    Cookies.remove("token");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    window.location.href = "/admin";
   };
 
   return (
@@ -85,61 +85,117 @@ const Sidebar = ({ setActiveComponent }) => {
       sx={{
         width: 250,
         flexShrink: 0,
-        '& .MuiDrawer-paper': {
+        "& .MuiDrawer-paper": {
           width: 250,
-          boxSizing: 'border-box',
-          bgcolor: '#374151',
-          color: 'white',
-          height: '100vh',
-          overflowY: 'auto',
+          boxSizing: "border-box",
+          bgcolor: "#1a202c", // Darker background for a more elegant look
+          color: "white",
+          height: "100vh",
+          overflowY: "auto",
+          // Custom scrollbar styling
+          "&::-webkit-scrollbar": {
+            width: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#2d3748", // Track color
+            borderRadius: "10px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "linear-gradient(45deg, #4ade80, #48bb78)", // Gradient thumb
+            borderRadius: "10px",
+            border: "2px solid #2d3748", // Border around thumb
+            "&:hover": {
+              background: "linear-gradient(45deg, #48bb78, #4ade80)", // Reverse gradient on hover
+            },
+          },
+          // For Firefox
+          scrollbarWidth: "thin",
+          scrollbarColor: "#4ade80 #2d3748",
         },
       }}
     >
-      <Box sx={{ p: 2, textAlign: 'center' }}>
+      <Box sx={{ p: 2, textAlign: "center" }}>
         <Image
           width={100}
           height={100}
           src="/store2ulogo.png"
           alt="Profile"
-          style={{ borderRadius: '2px', padding: '8px', margin: '0 auto', backgroundColor: 'white' }}
+          style={{ borderRadius: "4px", padding: "8px", margin: "0 auto", backgroundColor: "white" }}
         />
-        <Typography variant="h6" sx={{ mt: 1, fontWeight: 'bold', fontSize: '1.1rem' }}>
+        <Typography variant="h6" sx={{ mt: 1, fontWeight: "bold", fontSize: "1.1rem" }}>
           Store2u
         </Typography>
-        <Typography variant="body2" sx={{ color: '#4ade80', fontSize: '0.8rem' }}>
+        <Typography variant="body2" sx={{ color: "#4ade80", fontSize: "0.8rem" }}>
           ● Online
         </Typography>
       </Box>
 
-      <Divider sx={{ bgcolor: '#4b5563' }} />
+      <Divider sx={{ bgcolor: "#4b5563", my: 1 }} />
 
-      <List sx={{ p: 2 }}>
+      <List sx={{ p: 0 }}>
         {/* Home */}
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/admin/pages/Main">
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px' }}>
-              <HomeIcon sx={{ fontSize: '1.2rem' }} />
+          <ListItemButton
+            component="a"
+            href="/admin/pages/Main"
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: "white", minWidth: "32px" }}>
+              <HomeIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <ListItemText primary="Home" primaryTypographyProps={{ fontSize: '0.9rem' }} />
+            <ListItemText primary="Home" primaryTypographyProps={{ fontSize: "0.9rem" }} />
           </ListItemButton>
         </ListItem>
 
         {/* Customers Data */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('customers')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("customers")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <PeopleIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <PeopleIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Customers</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Customers</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/customer">
-                  <ListItemText primary="Customers" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/customer"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Customers"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -147,26 +203,67 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Products */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('products')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("products")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <InventoryIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <InventoryIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Products</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Products</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/Products">
-                  <ListItemText primary="All Products" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/Products"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="All Products"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/add-product">
-                  <ListItemText primary="Add Products" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/add-product"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Add Products"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -174,21 +271,46 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Orders */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('orders')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("orders")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <ShoppingCartIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <ShoppingCartIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Orders</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Orders</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/orders">
-                  <ListItemText primary="View Orders" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/orders"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="View Orders"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -196,26 +318,67 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Categories */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('categories')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("categories")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <TagIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <TagIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Categories</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}># Category</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/categories">
-                  <ListItemText primary="Categories" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/categories"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Categories"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/subcategories">
-                  <ListItemText primary="SubCategory" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/subcategories"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="SubCategory"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -223,21 +386,46 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Size */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('size')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("size")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <StraightenIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <StraightenIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Size</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Size</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/size">
-                  <ListItemText primary="Sizes" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/size"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Sizes"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -245,21 +433,46 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Color */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('color')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("color")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <BrushIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <BrushIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Color</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Color</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/color">
-                  <ListItemText primary="Colors" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/color"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Colors"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -267,26 +480,67 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Settings */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('settings')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("settings")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <SettingsIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <SettingsIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Settings</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Settings</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/settings">
-                  <ListItemText primary="Settings" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/settings"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Settings"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/facebook-pixel">
-                  <ListItemText primary="Facebook Pixel" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/facebook-pixel"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Facebook Pixel"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -294,21 +548,46 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Coupons */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('coupons')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("coupons")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <LocalOfferIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <LocalOfferIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Coupons</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Coupons</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/coupons">
-                  <ListItemText primary="Coupons" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/coupons"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Coupons"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -316,21 +595,46 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Sliders */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('sliders')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("sliders")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <ImageIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <ImageIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Slider</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Slider</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/slider">
-                  <ListItemText primary="View Sliders" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/slider"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="View Sliders"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -338,21 +642,46 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Social Media */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('socialmedia')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("socialmedia")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <PeopleIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <PeopleIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Social Media</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Social Media</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/socialmedia">
-                  <ListItemText primary="Manage Social Media" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/socialmedia"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Manage Social Media"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -360,26 +689,67 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Blog */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('blog')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("blog")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <ArticleIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <ArticleIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Blog</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Blog</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/Blogs">
-                  <ListItemText primary="Add Blog" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/Blogs"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Add Blog"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/BlogCategory">
-                  <ListItemText primary="Blog Categories" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/BlogCategory"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Blog Categories"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -387,21 +757,46 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Customer Reviews */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('reviews')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("reviews")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <StarIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <StarIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Customer Reviews</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Customer Reviews</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/reviews">
-                  <ListItemText primary="View Reviews" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/reviews"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="View Reviews"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -409,46 +804,151 @@ const Sidebar = ({ setActiveComponent }) => {
         </Accordion>
 
         {/* Pages */}
-        <Accordion sx={{ bgcolor: 'transparent', color: 'white', boxShadow: 'none' }}>
+        <Accordion sx={{ bgcolor: "transparent", color: "white", boxShadow: "none" }}>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{ color: 'white', fontSize: '1.2rem' }} />}
-            onClick={() => toggleDropdown('pages')}
+            expandIcon={<ExpandMoreIcon sx={{ color: "white", fontSize: "1.2rem" }} />}
+            onClick={() => toggleDropdown("pages")}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
           >
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px', mr: 0 }}>
-              <DescriptionIcon sx={{ fontSize: '1.2rem' }} />
+            <ListItemIcon sx={{ color: "white", minWidth: "32px", mr: 0 }}>
+              <DescriptionIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <Typography sx={{ fontSize: '0.9rem' }}>Pages</Typography>
+            <Typography sx={{ fontSize: "0.9rem" }}>Pages</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <List>
+          <AccordionDetails sx={{ p: 0, bgcolor: "#2d3748" }}>
+            <List sx={{ p: 0 }}>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/addPrivacyPolicy">
-                  <ListItemText primary="Privacy Policy" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/addPrivacyPolicy"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Privacy Policy"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/addTermsAndConditions">
-                  <ListItemText primary="Terms & Conditions" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/addTermsAndConditions"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Terms & Conditions"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/addShippingPolicy">
-                  <ListItemText primary="Shipping Policy" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/addShippingPolicy"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Shipping Policy"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/addReturnAndExchangePolicy">
-                  <ListItemText primary="Return & Exchange Policy" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/addReturnAndExchangePolicy"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Return & Exchange Policy"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/addAboutUs">
-                  <ListItemText primary="About Us" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/addAboutUs"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="About Us"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton component="a" href="/admin/pages/addContactUs">
-                  <ListItemText primary="Contact Us" sx={{ pl: 4 }} primaryTypographyProps={{ fontSize: '0.9rem' }} />
+                <ListItemButton
+                  component="a"
+                  href="/admin/pages/addContactUs"
+                  sx={{
+                    py: 0.25,
+                    "&:hover": {
+                      bgcolor: "#4b5563",
+                      "& .MuiListItemText-primary": {
+                        color: "#4ade80",
+                      },
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary="Contact Us"
+                    sx={{ pl: 4 }}
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </List>
@@ -457,41 +957,88 @@ const Sidebar = ({ setActiveComponent }) => {
 
         {/* FAQs */}
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/admin/pages/addFAQ">
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px' }}>
-              <PeopleIcon sx={{ fontSize: '1.2rem' }} />
+          <ListItemButton
+            component="a"
+            href="/admin/pages/addFAQ"
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: "white", minWidth: "32px" }}>
+              <PeopleIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <ListItemText primary="FAQs" primaryTypographyProps={{ fontSize: '0.9rem' }} />
+            <ListItemText primary="FAQs" primaryTypographyProps={{ fontSize: "0.9rem" }} />
           </ListItemButton>
         </ListItem>
 
         {/* Contact Info */}
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/admin/pages/addContactInfo">
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px' }}>
-              <PhoneIcon sx={{ fontSize: '1.2rem' }} />
+          <ListItemButton
+            component="a"
+            href="/admin/pages/addContactInfo"
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: "white", minWidth: "32px" }}>
+              <PhoneIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <ListItemText primary="Contact Info" primaryTypographyProps={{ fontSize: '0.9rem' }} />
+            <ListItemText primary="Contact Info" primaryTypographyProps={{ fontSize: "0.9rem" }} />
           </ListItemButton>
         </ListItem>
 
         {/* Company Details */}
         <ListItem disablePadding>
-          <ListItemButton component="a" href="/admin/pages/CompanyDetails">
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px' }}>
-              <StoreIcon sx={{ fontSize: '1.2rem' }} />
+          <ListItemButton
+            component="a"
+            href="/admin/pages/CompanyDetails"
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: "white", minWidth: "32px" }}>
+              <StoreIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <ListItemText primary="Company Details" primaryTypographyProps={{ fontSize: '0.9rem' }} />
+            <ListItemText primary="Company Details" primaryTypographyProps={{ fontSize: "0.9rem" }} />
           </ListItemButton>
         </ListItem>
 
         {/* Logout */}
         <ListItem disablePadding>
-          <ListItemButton onClick={handleLogout}>
-            <ListItemIcon sx={{ color: 'white', minWidth: '32px' }}>
-              <ExitToAppIcon sx={{ fontSize: '1.2rem' }} />
+          <ListItemButton
+            onClick={handleLogout}
+            sx={{
+              py: 0.5,
+              "&:hover": {
+                bgcolor: "#2d3748",
+                "& .MuiListItemIcon-root": {
+                  color: "#4ade80",
+                },
+              },
+            }}
+          >
+            <ListItemIcon sx={{ color: "white", minWidth: "32px" }}>
+              <ExitToAppIcon sx={{ fontSize: "1.2rem" }} />
             </ListItemIcon>
-            <ListItemText primary="Logout" primaryTypographyProps={{ fontSize: '0.9rem' }} />
+            <ListItemText primary="Logout" primaryTypographyProps={{ fontSize: "0.9rem" }} />
           </ListItemButton>
         </ListItem>
       </List>
