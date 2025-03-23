@@ -15,6 +15,19 @@ export async function GET(req, { params }) {
 
     // Fetch orders for the user's userId
     const orders = await prisma.Order.findMany({
+        include: {
+            orderItems: {
+              include: {
+                product: {
+                  include: {
+                    images: {
+                      take: 1 // Take only the first image
+                    }
+                  }
+                }
+              },
+            },
+          },
       where: { userId: parseInt( id) }
     });
 
