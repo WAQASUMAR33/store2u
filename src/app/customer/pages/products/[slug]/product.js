@@ -33,6 +33,13 @@ const ProductPage = ({ productData }) => {
   const [product, setProduct] = useState(productData?.product || null);
   const [relatedProducts, setRelatedProducts] = useState(productData?.relatedProducts || []);
   const [error, setError] = useState(null);
+  
+  // Early check if productData is invalid
+  useEffect(() => {
+    if (!productData && !product) {
+      setError('Product data is not available. Please try again later.');
+    }
+  }, [productData, product]);
   const [reviews, setReviews] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
