@@ -283,18 +283,18 @@ const ProductPage = ({ productData }) => {
     if (!product) return null;
 
     return {
-      id: `${product.id}-${selectedSize || 'default'}-${selectedColor || 'default'}`,
-      productId: product.id,
+      id: `${product?.id || 'unknown'}-${selectedSize || 'default'}-${selectedColor || 'default'}`,
+      productId: product?.id || null,
       quantity: Number(quantity),
-      price: product.discount
-        ? calculateOriginalPrice(product.price, product.discount)
-        : Number(product.price),
+      price: product?.discount
+        ? calculateOriginalPrice(product?.price || 0, product.discount)
+        : Number(product?.price || 0),
       selectedColor: selectedColor || null,
       selectedSize: selectedSize || null,
-      images: Array.isArray(product.images) ? product.images : [],
-      name: product.name,
-      discount: product.discount || null,
-      slug: product.slug,
+      images: Array.isArray(product?.images) ? product.images : [],
+      name: product?.name || 'Product',
+      discount: product?.discount || null,
+      slug: product?.slug || '',
     };
   }, [product, quantity, selectedSize, selectedColor]);
 
@@ -401,7 +401,7 @@ const ProductPage = ({ productData }) => {
   }, []);
 
   const handleQuantityIncrease = useCallback(() => {
-    if (product?.stock) {
+    if (product?.stock && product.stock > 0) {
       setQuantity(prev => Math.min(product.stock, prev + 1));
     } else {
       setQuantity(prev => prev + 1);
@@ -461,7 +461,7 @@ const ProductPage = ({ productData }) => {
         {/* Product Images and Details */}
         <div className="w-full lg:w-3/5 mb-0 flex flex-col lg:flex-row h-full ">
           <div className="flex flex-col lg:flex-row relative  w-full">
-            {product.discount && (<>
+            {product?.discount && (<>
               <div className='absolute top-0 right-6  z-10'>
                 <span>
                   <div className='size-[3em] rounded-full bg-red-500 flex justify-center items-center text-white text-[1.5rem]'>
@@ -473,14 +473,14 @@ const ProductPage = ({ productData }) => {
 
             {/* Image Thumbnails */}
             <div className="flex w-20 flex-col justify-start items-center mr-4">
-              {product.images &&
+              {product?.images && Array.isArray(product.images) &&
                 product.images.map((image, index) => (
                   <Image
                     key={index}
                     width={80}
                     height={80}
-                    src={getImageUrl(image.url)}
-                    alt={`${product.name} thumbnail ${index + 1}`}
+                    src={getImageUrl(image?.url)}
+                    alt={`${product?.name || 'Product'} thumbnail ${index + 1}`}
                     className={`w-20 h-20 object-contain mb-2 cursor-pointer transition-opacity ${index === currentImageIndex ? 'opacity-100' : 'opacity-50'
                       }`}
                     onClick={() => handleThumbnailClick(index)}
@@ -491,7 +491,7 @@ const ProductPage = ({ productData }) => {
             </div>
             {/* Main Image */}
             <div className="relative w-full pl-4 flex justify-center items-center">
-              {product.images && product.images.length > 0 ? (
+              {product?.images && Array.isArray(product.images) && product.images.length > 0 && product.images[currentImageIndex] ? (
                 <motion.div
                   key={currentImageIndex}
                   initial={{ opacity: 0 }}
@@ -502,8 +502,8 @@ const ProductPage = ({ productData }) => {
                   <Image
                     width={800}
                     height={600}
-                    src={getImageUrl(product.images[currentImageIndex].url)}
-                    alt={product.name}
+                    src={getImageUrl(product.images[currentImageIndex]?.url)}
+                    alt={product?.name || 'Product image'}
                     className="w-full h-[400px] object-contain mb-4"
                     priority
                     sizes="(max-width: 768px) 100vw, 60vw"
@@ -521,22 +521,22 @@ const ProductPage = ({ productData }) => {
 
         {/* Product Info and Add to Cart */}
         <div className="w-full lg:w-2/5 h-full flex flex-col">
-          <h2 className="text-2xl font-bold mb-4">{product.name.toUpperCase()}</h2>
-          <p className='text-lg mt-2 mb-2'> {product.sku}</p>
+          <h2 className="text-2xl font-bold mb-4">{product?.name ? product.name.toUpperCase() : 'Product'}</h2>
+          {product?.sku && <p className='text-lg mt-2 mb-2'>{product.sku}</p>}
 
           <div className="flex items-center mb-4 w-full">
             <div className='flex justify-between w-full'>
-              {product.discount ? (
+              {product?.discount ? (
                 <div className='flex'>
                   <span className="text-green-500 text-xl line-through mr-4">
-                    Rs.{formatPrice(product.price)}
+                    Rs.{formatPrice(product?.price || 0)}
                   </span>
                   <span className="text-red-500 font-bold text-xl">
-                    Rs.{formatPrice(calculateOriginalPrice(product.price, product.discount))}
+                    Rs.{formatPrice(calculateOriginalPrice(product?.price || 0, product.discount))}
                   </span>
                 </div>
               ) : (
-                <div className="text-red-500 text-2xl">Rs.{formatPrice(product.price)}</div>
+                <div className="text-red-500 text-2xl">Rs.{formatPrice(product?.price || 0)}</div>
               )}
               <div className="relative">
                 <button
@@ -559,14 +559,20 @@ const ProductPage = ({ productData }) => {
                         <FaTimes />
                       </button>
                       <div className='flex'>
-                        <Image
-                 width={1000}
-                  height={1000}
-                  placeholder="data:image/jpeg;base64,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"
-           src={getImageUrl(product.images[0].url)} className='md:w-[5rem] md:h-[5rem] w-[8rem] h-[8rem]'/>
+                        {product?.images?.[0]?.url ? (
+                          <Image
+                            width={1000}
+                            height={1000}
+                            src={getImageUrl(product.images[0].url)} 
+                            className='md:w-[5rem] md:h-[5rem] w-[8rem] h-[8rem]'
+                            alt={product?.name || 'Product'}
+                          />
+                        ) : (
+                          <div className='md:w-[5rem] md:h-[5rem] w-[8rem] h-[8rem] bg-gray-200 rounded'></div>
+                        )}
                         <div className='flex flex-col p-2'>
-                          <p className='text-lg line-clamp-1'>{product.name}</p>
-                          {product.discount ? (
+                          <p className='text-lg line-clamp-1'>{product?.name || 'Product'}</p>
+                          {product?.discount ? (
                             <div className='flex'>
                               <span className="text-green-500 text-lg line-through mr-4">
                                 Rs.{formatPrice(product.price)}
@@ -576,13 +582,13 @@ const ProductPage = ({ productData }) => {
                               </span>
                             </div>
                           ) : (
-                            <div className="text-red-500 text-2xl">Rs.{formatPrice(product.price)}</div>
+                            <div className="text-red-500 text-2xl">Rs.{formatPrice(product?.price || 0)}</div>
                           )}
                         </div>
                       </div>
                       <h2 className="text-lg font-semibold mb-4">Share this Product</h2>
                       <div className="flex items-center justify-between bg-gray-100 p-3 rounded-lg border border-gray-300 mb-4 w-full">
-                        <span className="text-gray-600 text-sm truncate" aria-label="Product link">{productLink}</span>
+                        <span className="text-gray-600 text-sm truncate" aria-label="Product link">{productLink || 'Loading...'}</span>
                         <button
                           onClick={handleCopyLink}
                           className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
@@ -601,7 +607,7 @@ const ProductPage = ({ productData }) => {
 
           {/* Stock Info */}
           <div className="mb-4">
-            {product.stock === 0 ? (
+            {!product?.stock || product.stock === 0 ? (
               <p className="text-lg font-bold text-red-700 mb-1" role="status" aria-live="polite">
                 Out of Stock
               </p>
@@ -685,7 +691,7 @@ const ProductPage = ({ productData }) => {
             <button
               className="bg-teal-500 text-white py-2 px-4 rounded-full w-full text-center hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleAddToCart}
-              disabled={product.stock === 0 || loading}
+              disabled={!product || !product.stock || product.stock === 0 || loading}
               aria-label="Add to cart"
             >
               Add to cart
@@ -693,7 +699,7 @@ const ProductPage = ({ productData }) => {
             <button
               className="bg-red-500 text-white py-2 px-4 rounded-full w-full text-center hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleBuyNow}
-              disabled={product.stock === 0 || loading}
+              disabled={!product || !product.stock || product.stock === 0 || loading}
               aria-label="Buy now"
             >
               Buy Now
@@ -705,7 +711,7 @@ const ProductPage = ({ productData }) => {
           <h3 className="text-md font-semibold text-gray-700 mb-4 mt-4">Description</h3>
           <div
             className="text-gray-500 mb-4 prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{ __html: product.description || 'No description available.' }}
+            dangerouslySetInnerHTML={{ __html: product?.description || 'No description available.' }}
             aria-label="Product description"
           />
 
