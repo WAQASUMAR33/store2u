@@ -46,7 +46,7 @@ import prisma from '../../../util/prisma';  // Ensure this path is correct based
 
 export async function GET(request, { params }) {
   try {
-    const { slug } = params; // Extract the slug from the URL parameters
+    const { slug } = await params; // Extract the slug from the URL parameters
 
     // Validate the presence of the slug
     if (!slug) {

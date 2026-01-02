@@ -5,7 +5,7 @@ import { stringify } from 'querystring';
 // PUT /api/products/[slug]
 export async function PUT(request, { params }) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const {
       name,
       description,
@@ -78,7 +78,7 @@ export async function PUT(request, { params }) {
 
 
 export async function GET(request, { params }) {
-  const { slug } = params; // Use slug parameter
+  const { slug } = await params; // Use slug parameter
 
   try {
     // Fetch the product by slug
@@ -160,7 +160,7 @@ export async function GET(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
-    const { slug } = params;  // Use slug instead of id
+    const { slug } = await params;  // Use slug instead of id
 
     // Fetch the product by slug to get the id
     const product = await prisma.product.findUnique({

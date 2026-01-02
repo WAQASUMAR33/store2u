@@ -79,13 +79,13 @@ const BlogSection = ({ blogs, title, category }) => {
                 {/* Blog Image */}
                 <div className="relative pb-56 flex-shrink-0">
                   <Image
-                    width={1000}
-                    height={1000}
-                    placeholder="blur"
-                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSk..." // Replace with actual Base64 placeholder
+                    width={800}
+                    height={600}
                     src={blog.image ? `${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${blog.image}` : "/fallback.jpg"}
                     alt={blog.title || "Blog Image"}
                     className="absolute inset-0 w-full h-full object-cover rounded-t-lg"
+                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                 </div>
 

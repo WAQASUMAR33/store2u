@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const SubcategoryPage = () => {
   const { slug } = useParams();
@@ -161,13 +162,21 @@ const SubcategoryPage = () => {
                 )}
                 <div className="relative overflow-hidden">
                   {product.images && product.images.length > 0 ? (
-                    <motion.img
-                      src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${product.images[0].url}`}
-                      alt={product.name}
-                      className="h-[220px] w-full object-contain mb-4 rounded bg-white"
+                    <motion.div
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.3 }}
-                    />
+                      className="h-[220px] w-full mb-4 rounded bg-white overflow-hidden"
+                    >
+                      <Image
+                        width={300}
+                        height={220}
+                        src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${product.images[0].url}`}
+                        alt={product.name}
+                        className="h-[220px] w-full object-contain"
+                        loading="lazy"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      />
+                    </motion.div>
                   ) : (
                     <div className="h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
                       No Image

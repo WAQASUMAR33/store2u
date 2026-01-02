@@ -50,26 +50,34 @@ const TopCategories = () => {
               style={{ minHeight: '240px' }} // Adjust the minHeight value as needed
             >
               {category.imageUrl ? (
-                <motion.img
-                  src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${category.imageUrl}`}
-                  alt={category.name}
-                  className="w-full h-40 object-cover mb-2 rounded-md" // Adjusted image size
+                <motion.div
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.3 }}
-                  onError={(e) => {
-                    console.error(`Failed to load image: ${e.target.src}`);
-                    e.target.onerror = null; 
-                    e.target.src = '/fallback-image.jpg'; // Replace with a path to a fallback image
-                  }}
-                />
+                  className="w-full h-40 mb-2 rounded-md overflow-hidden"
+                >
+                  <Image
+                    width={300}
+                    height={160}
+                    src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${category.imageUrl}`}
+                    alt={category.name}
+                    className="w-full h-40 object-cover"
+                    loading="lazy"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/fallback-image.jpg';
+                    }}
+                  />
+                </motion.div>
               ) : (
                 <Image
-                  width={1000}
-                  height={1000}
-                  placeholder="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+                  width={300}
+                  height={160}
                   src="/fallback-image.jpg"
                   alt={category.name}
-                  className="w-full h-40 object-cover mb-2 rounded-md" // Ensured same size as dynamic image
+                  className="w-full h-40 object-cover mb-2 rounded-md"
+                  loading="lazy"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
                 />
               )}
               <p className="text-lg font-semibold">{category.name}</p> {/* Slightly larger text */}

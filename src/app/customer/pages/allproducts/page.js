@@ -7,6 +7,7 @@ import { ThreeDots } from 'react-loader-spinner';
 import { useDispatch } from 'react-redux';
 import { addToCart, setCart } from '../../../store/cartSlice';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
@@ -116,18 +117,26 @@ const AllProducts = () => {
                 )}
                 <div className="relative overflow-hidden">
                   {product.images && product.images.length > 0 ? (
-                    <motion.img
-                      src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${product.images[0]}`}
-                      alt={product.name}
-                      className="h-[240px] md:h-[220px] w-full object-contain mb-4 rounded bg-white"
+                    <motion.div
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.3 }}
+                      className="h-[240px] md:h-[220px] w-full mb-4 rounded bg-white overflow-hidden cursor-pointer"
                       onClick={() => handleProductClick(product.slug)}
-                    />
+                    >
+                      <Image
+                        width={300}
+                        height={240}
+                        src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${product.images[0]}`}
+                        alt={product.name}
+                        className="h-[240px] md:h-[220px] w-full object-contain"
+                        loading="lazy"
+                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                      />
+                    </motion.div>
                   ) : (
                     <div
-                      className="h-[240px] md:h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500"
-                      onClick={() => handleProductClick(product.id)}
+                      className="h-[240px] md:h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500 cursor-pointer"
+                      onClick={() => handleProductClick(product.slug)}
                     >
                       No Image
                     </div>

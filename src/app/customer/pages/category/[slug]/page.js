@@ -1,82 +1,117 @@
 import { notFound } from 'next/navigation';
-import CategoryPage from './CategoryPage'; // Your CategoryPage component
-import Head from 'next/head';
+import CategoryPage from './CategoryPage';
 
-// Fetch category data server-side using async function
+/**
+ * Fetches category data from the API
+ * @param {string} slug - Category slug identifier
+ * @returns {Promise<Object|null>} Category data or null if error
+ */
 async function getCategoryData(slug) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  if (!slug) {
+    return null;
+  }
 
   try {
-    console.log("Fetching category data for slug:", slug); // Debugging log
-    const res = await fetch(`${apiUrl}/api/categories/${slug}`, { cache: 'no-store' });
+    // Use relative URL for better compatibility
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+    const apiUrl = baseUrl ? `${baseUrl}/api/categories/${slug}` : `/api/categories/${slug}`;
+    
+    // Use ISR (Incremental Static Regeneration) for better performance
+    const res = await fetch(apiUrl, { 
+      next: { revalidate: 300 }, // Cache for 5 minutes
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!res.ok) {
-      console.error('Error fetching category data:', res.statusText);
-      return null;
+      if (res.status === 404) {
+        return null;
+      }
+      throw new Error(`Failed to fetch category: ${res.status}`);
     }
 
     const data = await res.json();
-    console.log('API response:', data); // Log the entire response
-
-    if (!data || !data.data) {
-      console.error('Category data is missing in the response');
+    
+    if (!data?.data) {
       return null;
     }
 
-    return data.data; // Ensure you return the correct data structure
+    return data.data;
   } catch (error) {
-    console.error('Error fetching category data:', error);
+    // Only log errors in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching category data:', error);
+    }
     return null;
   }
 }
 
-// Metadata generation for SEO
+/**
+ * Generates metadata for SEO
+ */
 export async function generateMetadata({ params }) {
-  const { slug } = params;
-  console.log("Generating metadata for slug:", slug); // Debugging log
+  const { slug } = await params;
+  
+  if (!slug) {
+    return {
+      title: 'Category Not Found | Store2U',
+      description: 'The category you are looking for could not be found.',
+    };
+  }
+
   const category = await getCategoryData(slug);
 
   if (!category) {
     return {
-      title: 'Category not found',
-      description: 'No category information available',
+      title: 'Category Not Found | Store2U',
+      description: 'The category you are looking for could not be found.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  // Set meta title, description, and keywords dynamically based on category data
+  const title = category.meta_title || category.name || 'Category';
+  const description = category.meta_description || 
+    `Browse ${category.name} products at Store2U. Find quality products in this category.`;
+
   return {
-    title: category.meta_title || category.name || 'Category Title',
-    description: category.meta_description || 'Category Description',
-    keywords: category.meta_keywords || 'Category Keywords',
+    title: `${title} | Store2U`,
+    description,
+    keywords: category.meta_keywords || category.name,
+    openGraph: {
+      title: `${title} | Store2U`,
+      description,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title: `${title} | Store2U`,
+      description,
+    },
   };
 }
 
+/**
+ * Category Details Page Component
+ * Server component that fetches category data and renders the client component
+ */
 const CategoryDetailsPage = async ({ params }) => {
-  const { slug } = params;
-  console.log("Rendering category details page for slug:", slug); // Debugging log
+  const { slug } = await params;
 
-  // Fetch the category data
-  const category = await getCategoryData(slug);
-
-  // Handle category not found
-  if (!category) {
-    return notFound(); // Use Next.js built-in 404 handling
+  if (!slug) {
+    return notFound();
   }
 
-  // Return the page with meta tags and category data
-  return (
-    <>
-      {/* Set Meta Tags for SEO */}
-      <Head>
-        <title>{category.meta_title || 'Category Title'}</title>
-        <meta name="description" content={category.meta_description || 'Category Description'} />
-        <meta name="keywords" content={category.meta_keywords || 'Category Keywords'} />
-      </Head>
+  const category = await getCategoryData(slug);
 
-      {/* Render the Category Page */}
-      <CategoryPage categoryData={category} />
-    </>
-  );
+  if (!category) {
+    return notFound();
+  }
+
+  return <CategoryPage categoryData={category} />;
 };
 
 export default CategoryDetailsPage;

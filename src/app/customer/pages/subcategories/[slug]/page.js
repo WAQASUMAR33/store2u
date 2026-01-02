@@ -4,33 +4,50 @@ import SubcategoryPage from './SubcategoryPage'; // Adjust the import path if ne
 
 // Fetch subcategory data server-side
 async function getSubcategoryData(slug) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  if (!slug) {
+    return null;
+  }
 
   try {
-    const res = await fetch(`${apiUrl}/api/subcatdetail/${slug}`, { cache: 'no-store' });
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+    const apiUrl = baseUrl ? `${baseUrl}/api/subcatdetail/${slug}` : `/api/subcatdetail/${slug}`;
+    
+    // Use ISR (Incremental Static Regeneration) for better performance
+    const res = await fetch(apiUrl, { 
+      next: { revalidate: 300 }, // Cache for 5 minutes
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!res.ok) {
-      console.error('Error fetching subcategory data:', res.statusText);
+      if (res.status === 404) {
+        return null;
+      }
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching subcategory data:', res.statusText);
+      }
       return null;
     }
 
     const data = await res.json();
 
-    if (!data || !data.data) {
-      console.error('Subcategory data is missing in the response');
+    if (!data?.data) {
       return null;
     }
 
-    return data.data; // Return the subcategory details
+    return data.data;
   } catch (error) {
-    console.error('Error fetching subcategory data:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching subcategory data:', error);
+    }
     return null;
   }
 }
 
 // Metadata generation
 export async function generateMetadata({ params }) {
-  const { slug } = params;
+  const { slug } = await params;
   const subcategory = await getSubcategoryData(slug);
 
   if (!subcategory) {
@@ -49,7 +66,7 @@ export async function generateMetadata({ params }) {
 }
 
 const SubcategoryDetailsPage = async ({ params }) => {
-  const { slug } = params;
+  const { slug } = await params;
 
   // Fetch the subcategory data
   const subcategory = await getSubcategoryData(slug);

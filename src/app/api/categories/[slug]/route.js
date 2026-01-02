@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../util/prisma';
 
-// Get category by id (GET /api/categories/[id])
+// Get category by slug (GET /api/categories/[slug])
 export async function GET(request, { params }) {
-  const { slug } = params;  // Use slug instead of id
+  const { slug } = await params;  // Use slug instead of id
 
   if (!slug) {
     return NextResponse.json(
@@ -39,7 +39,7 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     // Extract slug from params
-    const { slug } = params;
+    const { slug } = await params;
 
     // If slug is undefined, return an error
     if (!slug) {
@@ -93,7 +93,7 @@ export async function PUT(request, { params }) {
 // Delete a category by slug (DELETE /api/categories/[slug])
 export async function DELETE(request, { params }) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
 
     if (!slug) {
       return NextResponse.json(

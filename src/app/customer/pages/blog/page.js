@@ -81,13 +81,13 @@ function BlogPosts({ blogs }) {
           <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
             {/* Image Fix: Removed extra space, added fallback */}
             <Image
-              width={1000}
-              height={1000}
-              // placeholder="blur"
-              // blurDataURL="data:image/jpeg;base64,/9j/4AAQSk..." // Replace with actual base64 placeholder
-               src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${post.image}`}
+              width={800}
+              height={400}
+              src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${post.image}`}
               alt={post.title || "Blog Image"}
               className="w-full h-48 object-cover"
+              loading="lazy"
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
 
             <div className="p-6">

@@ -39,6 +39,10 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import Chip from '@mui/material/Chip';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
@@ -301,6 +305,53 @@ const FilterableTable = ({
     page * rowsPerPage + rowsPerPage
   );
 
+  // Stock level helper function
+  const getStockStatus = (stock) => {
+    const stockNum = parseInt(stock) || 0;
+    if (stockNum === 0) {
+      return { label: 'Out of Stock', color: 'error', severity: 'error', icon: <WarningIcon /> };
+    } else if (stockNum < 10) {
+      return { label: 'Low Stock', color: 'warning', severity: 'warning', icon: <WarningIcon /> };
+    } else if (stockNum < 50) {
+      return { label: 'Medium Stock', color: 'info', severity: 'info', icon: <InventoryIcon /> };
+    } else {
+      return { label: 'In Stock', color: 'success', severity: 'success', icon: <CheckCircleIcon /> };
+    }
+  };
+
+  // Stock display component
+  const StockDisplay = ({ stock }) => {
+    const stockNum = parseInt(stock) || 0;
+    const status = getStockStatus(stock);
+    
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Chip
+          icon={status.icon}
+          label={`${stockNum} units`}
+          color={status.color}
+          size="small"
+          sx={{
+            fontWeight: 600,
+            fontSize: '0.75rem',
+          }}
+        />
+        <Typography
+          variant="caption"
+          sx={{
+            color: status.color === 'error' ? 'error.main' : 
+                   status.color === 'warning' ? 'warning.main' : 
+                   status.color === 'info' ? 'info.main' : 'success.main',
+            fontWeight: 500,
+            fontSize: '0.7rem',
+          }}
+        >
+          {status.label}
+        </Typography>
+      </Box>
+    );
+  };
+
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', p: 2 }}>
       {/* Confirmation Dialog */}
@@ -343,15 +394,43 @@ const FilterableTable = ({
       )}
 
       {/* Products List */}
-      <Card>
+      <Card sx={{ borderRadius: 2, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h6">Products List</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Box>
-              <IconButton onClick={() => setIsSearchVisible(!isSearchVisible)}>
+              <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
+                PPE Stock List
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Manage your product inventory and stock levels
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <IconButton
+                onClick={() => setIsSearchVisible(!isSearchVisible)}
+                sx={{
+                  bgcolor: isSearchVisible ? 'primary.main' : 'transparent',
+                  color: isSearchVisible ? 'white' : 'primary.main',
+                  '&:hover': {
+                    bgcolor: 'primary.dark',
+                    color: 'white',
+                  },
+                  transition: 'all 0.2s',
+                }}
+              >
                 <SearchIcon />
               </IconButton>
-              <IconButton onClick={() => router.push('/admin/pages/add-product')}>
+              <IconButton
+                onClick={() => router.push('/admin/pages/add-product')}
+                sx={{
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: 'primary.dark',
+                  },
+                  transition: 'all 0.2s',
+                }}
+              >
                 <PlusIcon className="h-6 w-6" />
               </IconButton>
             </Box>
@@ -362,7 +441,7 @@ const FilterableTable = ({
             <TextField
               fullWidth
               variant="outlined"
-              placeholder="Search..."
+              placeholder="Search products by name, SKU, or description..."
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               InputProps={{
@@ -372,68 +451,265 @@ const FilterableTable = ({
                   </InputAdornment>
                 ),
               }}
-              sx={{ mb: 2 }}
+              sx={{
+                mb: 3,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                  '&:hover fieldset': {
+                    borderColor: 'primary.main',
+                  },
+                },
+              }}
             />
           )}
 
+          {/* Stock Summary */}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2,
+              mb: 3,
+              flexWrap: 'wrap',
+            }}
+          >
+            <Card
+              sx={{
+                flex: 1,
+                minWidth: 150,
+                bgcolor: 'error.light',
+                color: 'white',
+                p: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                Out of Stock
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                {filteredData.filter((p) => parseInt(p.stock || 0) === 0).length}
+              </Typography>
+            </Card>
+            <Card
+              sx={{
+                flex: 1,
+                minWidth: 150,
+                bgcolor: 'warning.light',
+                color: 'white',
+                p: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                Low Stock
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                {filteredData.filter((p) => {
+                  const stock = parseInt(p.stock || 0);
+                  return stock > 0 && stock < 10;
+                }).length}
+              </Typography>
+            </Card>
+            <Card
+              sx={{
+                flex: 1,
+                minWidth: 150,
+                bgcolor: 'info.light',
+                color: 'white',
+                p: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                Medium Stock
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                {filteredData.filter((p) => {
+                  const stock = parseInt(p.stock || 0);
+                  return stock >= 10 && stock < 50;
+                }).length}
+              </Typography>
+            </Card>
+            <Card
+              sx={{
+                flex: 1,
+                minWidth: 150,
+                bgcolor: 'success.light',
+                color: 'white',
+                p: 2,
+                borderRadius: 2,
+              }}
+            >
+              <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                In Stock
+              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                {filteredData.filter((p) => parseInt(p.stock || 0) >= 50).length}
+              </Typography>
+            </Card>
+          </Box>
+
           {/* Products Table */}
-          <TableContainer component={Paper}>
+          <TableContainer 
+            component={Paper}
+            sx={{
+              borderRadius: 2,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              overflow: 'hidden',
+            }}
+          >
             <Table>
               <TableHead>
-                <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>SKU</TableCell>
-                  <TableCell>Image</TableCell>
-                  <TableCell>Slug</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Price</TableCell>
-                  <TableCell>Stock</TableCell>
-                  <TableCell>Updated At</TableCell>
-                  <TableCell>Actions</TableCell>
+                <TableRow sx={{ bgcolor: 'primary.main' }}>
+                  <TableCell sx={{ color: 'white', fontWeight: 600 }}>ID</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 600 }}>SKU</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 600 }}>Image</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 600 }}>Name</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 600 }}>Price</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 600 }}>Stock Status</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 600 }}>Updated At</TableCell>
+                  <TableCell sx={{ color: 'white', fontWeight: 600 }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {Array.isArray(paginatedData) &&
+                {Array.isArray(paginatedData) && paginatedData.length > 0 ? (
                   paginatedData.map((item, index) => (
-                    <TableRow key={item.slug}>
-                      <TableCell>{item.id}</TableCell>
-                      <TableCell>{item.sku}</TableCell>
+                    <TableRow 
+                      key={item.slug}
+                      sx={{
+                        '&:hover': {
+                          bgcolor: 'action.hover',
+                          cursor: 'pointer',
+                        },
+                        transition: 'background-color 0.2s',
+                      }}
+                    >
+                      <TableCell sx={{ fontWeight: 500 }}>{item.id}</TableCell>
+                      <TableCell>
+                        <Chip
+                          label={item.sku || 'N/A'}
+                          size="small"
+                          variant="outlined"
+                          sx={{ fontWeight: 500 }}
+                        />
+                      </TableCell>
                       <TableCell>
                         {item.images && item.images.length > 0 ? (
-                          <Image
-                            width={64}
-                            height={64}
-                            src={
-                              item.images[0].url.startsWith('https://')
-                                ? item.images[0].url
-                                : `${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${item.images[0].url}`
-                            }
-                            alt="Product Image"
-                            style={{ objectFit: 'cover' }}
-                          />
+                          <Box
+                            sx={{
+                              width: 64,
+                              height: 64,
+                              borderRadius: 1,
+                              overflow: 'hidden',
+                              border: '1px solid',
+                              borderColor: 'divider',
+                            }}
+                          >
+                            <Image
+                              width={64}
+                              height={64}
+                              src={
+                                item.images[0].url.startsWith('https://')
+                                  ? item.images[0].url
+                                  : `${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${item.images[0].url}`
+                              }
+                              alt="Product Image"
+                              style={{ 
+                                objectFit: 'cover',
+                                width: '100%',
+                                height: '100%',
+                              }}
+                            />
+                          </Box>
                         ) : (
-                          'N/A'
+                          <Box
+                            sx={{
+                              width: 64,
+                              height: 64,
+                              borderRadius: 1,
+                              bgcolor: 'grey.200',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'grey.500',
+                              fontSize: '0.75rem',
+                            }}
+                          >
+                            No Image
+                          </Box>
                         )}
                       </TableCell>
-                      <TableCell>{item.slug}</TableCell>
-                      <TableCell>{item.name}</TableCell>
                       <TableCell>
-                        <div dangerouslySetInnerHTML={{ __html: item.description }} />
+                        <Typography variant="body2" sx={{ fontWeight: 500, maxWidth: 200 }}>
+                          {item.name}
+                        </Typography>
                       </TableCell>
-                      <TableCell>{item.price}</TableCell>
-                      <TableCell>{item.stock}</TableCell>
-                      <TableCell>{new Date(item.updatedAt).toLocaleString()}</TableCell>
                       <TableCell>
-                        <IconButton color="primary" onClick={() => handleEditItem(item)}>
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton color="secondary" onClick={() => handleDeleteClick(item.slug)}>
-                          <DeleteIcon />
-                        </IconButton>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontWeight: 600,
+                            color: 'primary.main',
+                            fontSize: '1rem',
+                          }}
+                        >
+                          ${parseFloat(item.price || 0).toFixed(2)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <StockDisplay stock={item.stock} />
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                          {new Date(item.updatedAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box sx={{ display: 'flex', gap: 0.5 }}>
+                          <IconButton
+                            color="primary"
+                            onClick={() => handleEditItem(item)}
+                            sx={{
+                              '&:hover': {
+                                bgcolor: 'primary.light',
+                                color: 'white',
+                              },
+                              transition: 'all 0.2s',
+                            }}
+                          >
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            color="error"
+                            onClick={() => handleDeleteClick(item.slug)}
+                            sx={{
+                              '&:hover': {
+                                bgcolor: 'error.light',
+                                color: 'white',
+                              },
+                              transition: 'all 0.2s',
+                            }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Box>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={8} align="center" sx={{ py: 4 }}>
+                      <Typography variant="body1" color="text.secondary">
+                        No products found
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>

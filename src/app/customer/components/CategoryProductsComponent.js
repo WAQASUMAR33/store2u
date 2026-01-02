@@ -7,6 +7,7 @@ import { FiChevronLeft, FiChevronRight, FiPlus } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../store/cartSlice';
+import Image from 'next/image';
 
 const SubcategoryProductsComponent = () => {
   const [subcategories, setSubcategories] = useState([]);
@@ -110,18 +111,25 @@ const SubcategoryProductsComponent = () => {
                   onClick={() => handleProductClick(product.id)}
                 >
                   {product.images && product.images.length > 0 ? (
-                    <motion.img
-                      src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${product.images[0].url}`}
-                      alt={product.name}
-                      className="h-40 w-full object-contain mb-4 rounded"
+                    <motion.div
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.3 }}
-                      onError={(e) => {
-                        console.error(`Failed to load image: ${e.target.src}`);
-                        e.target.onerror = null;
-                        e.target.src = '/fallback-image.jpg'; // Replace with a path to a fallback image
-                      }}
-                    />
+                      className="h-40 w-full mb-4 rounded overflow-hidden"
+                    >
+                      <Image
+                        width={300}
+                        height={160}
+                        src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${product.images[0].url}`}
+                        alt={product.name}
+                        className="h-40 w-full object-contain"
+                        loading="lazy"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/fallback-image.jpg';
+                        }}
+                      />
+                    </motion.div>
                   ) : (
                     <div className="h-40 w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
                       No Image

@@ -7,12 +7,9 @@ const generateSlug = (name) => {
 };
 
 // Get subcategories by category slug
-// Get subcategories by category slug
 export async function GET(request, { params }) {
   try {
-    console.log('Request parameters:', params);
-
-    const { slug } = params;
+    const { slug } = await params;
 
     if (!slug) {
       return NextResponse.json(
@@ -133,7 +130,7 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const { name, categoryId, imageUrl, meta_title, meta_description, meta_keywords } = await request.json();
 
     // Update subcategory by slug
@@ -173,7 +170,7 @@ export async function PUT(request, { params }) {
 // Delete subcategory by slug
 export async function DELETE(request, { params }) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
 
     if (!slug) {
       return NextResponse.json(

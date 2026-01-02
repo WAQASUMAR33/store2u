@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ThreeDots } from 'react-loader-spinner';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../../store/cartSlice';
+import Image from 'next/image';
 
 const DiscountedProducts = () => {
   const [products, setProducts] = useState([]);
@@ -83,17 +84,25 @@ const DiscountedProducts = () => {
 
               <div className="relative">
                 {product.images && product.images.length > 0 ? (
-                  <motion.img
-                    src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${product.images[0].url}`}
-                    alt={product.name}
-                    className="h-[200px] md:h-[200px] w-full object-contain mb-4 rounded bg-white"
+                  <motion.div
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.3 }}
+                    className="h-[200px] md:h-[200px] w-full mb-4 rounded bg-white overflow-hidden cursor-pointer"
                     onClick={() => handleProductClick(product.slug)}
-                  />
+                  >
+                    <Image
+                      width={300}
+                      height={200}
+                      src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${product.images[0].url}`}
+                      alt={product.name}
+                      className="h-[200px] md:h-[200px] w-full object-contain"
+                      loading="lazy"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                    />
+                  </motion.div>
                 ) : (
                   <div
-                    className="h-[240px] md:h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500"
+                    className="h-[240px] md:h-[220px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500 cursor-pointer"
                     onClick={() => handleProductClick(product.slug)}
                   >
                     No Image
