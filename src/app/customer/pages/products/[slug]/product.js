@@ -759,22 +759,21 @@ const ProductPage = ({ productData }) => {
 
           </div>
         </div>
-      </div>
 
-      {/* Related Products Section */}
-      {relatedProducts.length > 0 && (
-        <RelatedProductsSection 
-          relatedProducts={relatedProducts}
-          calculateOriginalPrice={calculateOriginalPrice}
-          formatPrice={formatPrice}
-          getImageUrl={getImageUrl}
-          router={router}
-        />
-      )}
+        {/* Related Products Section */}
+        {relatedProducts.length > 0 && (
+          <RelatedProductsSection 
+            relatedProducts={relatedProducts}
+            calculateOriginalPrice={calculateOriginalPrice}
+            formatPrice={formatPrice}
+            getImageUrl={getImageUrl}
+            router={router}
+          />
+        )}
 
-      {/* Modal for Related Products */}
-      {isModalOpen && (
-        <Modal
+        {/* Modal for Related Products */}
+        {isModalOpen && (
+          <Modal
             isOpen={isModalOpen}
             onRequestClose={handleCloseModal}
             contentLabel="Related Products"
@@ -864,7 +863,8 @@ const ProductPage = ({ productData }) => {
               </button>
             </div>
           </Modal>
-      )}
+        )}
+      </div>
     </div>
   );
 };
