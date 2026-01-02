@@ -385,6 +385,23 @@ const ProductPage = ({ productData }) => {
     return baseUrl ? `${baseUrl}/${url}` : url;
   }, []);
 
+  // Check if image URL should be unoptimized (for external images that timeout)
+  const shouldUnoptimize = useCallback((url) => {
+    if (!url) return false;
+    // Check if the original URL is from data.tascpa.ca
+    if (url.includes('data.tascpa.ca') || url.startsWith('https://data.tascpa.ca')) {
+      return true;
+    }
+    // Check if NEXT_PUBLIC_UPLOADED_IMAGE_URL points to data.tascpa.ca
+    const baseUrl = process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL || '';
+    if (baseUrl.includes('data.tascpa.ca')) {
+      return true;
+    }
+    // Check the final constructed URL
+    const imageUrl = getImageUrl(url);
+    return imageUrl.includes('data.tascpa.ca');
+  }, [getImageUrl]);
+
   // Handle image loading errors
   const handleImageError = useCallback((e) => {
     e.target.src = '/placeholder-image.png';
@@ -499,7 +516,7 @@ const ProductPage = ({ productData }) => {
                     onClick={() => handleThumbnailClick(index)}
                     loading={index < 3 ? 'eager' : 'lazy'}
                     sizes="80px"
-                    unoptimized={image?.url?.startsWith('https://data.tascpa.ca')}
+                    unoptimized={shouldUnoptimize(image?.url)}
                     onError={handleImageError}
                   />
                 ))}
@@ -523,7 +540,7 @@ const ProductPage = ({ productData }) => {
                     priority
                     sizes="(max-width: 768px) 100vw, 60vw"
                     quality={90}
-                    unoptimized={product.images[currentImageIndex]?.url?.startsWith('https://data.tascpa.ca')}
+                    unoptimized={shouldUnoptimize(product.images[currentImageIndex]?.url)}
                     onError={handleImageError}
                   />
                 </motion.div>
@@ -583,7 +600,7 @@ const ProductPage = ({ productData }) => {
                             src={getImageUrl(product.images[0]?.url)} 
                             className='md:w-[5rem] md:h-[5rem] w-[8rem] h-[8rem]'
                             alt={product?.name || 'Product'}
-                            unoptimized={product.images[0]?.url?.startsWith('https://data.tascpa.ca')}
+                            unoptimized={shouldUnoptimize(product.images[0]?.url)}
                             onError={handleImageError}
                           />
                         ) : (
@@ -905,7 +922,7 @@ const ProductPage = ({ productData }) => {
 };
 
 // Memoized Related Products Component for performance
-const RelatedProductsSection = memo(({ relatedProducts, calculateOriginalPrice, formatPrice, getImageUrl, router }) => {
+const RelatedProductsSection = memo(({ relatedProducts, calculateOriginalPrice, formatPrice, getImageUrl, shouldUnoptimize, router }) => {
   const handleProductClick = useCallback((slug) => {
     if (slug) {
       router.push(`/customer/pages/products/${slug}`);
@@ -953,6 +970,7 @@ const RelatedProductsSection = memo(({ relatedProducts, calculateOriginalPrice, 
                     className="h-[240px] w-full object-contain mb-4 rounded bg-white"
                     loading="lazy"
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                    unoptimized={shouldUnoptimize ? shouldUnoptimize(relatedProduct.images[0].url) : true}
                   />
                 ) : (
                   <div className="h-[240px] w-full bg-gray-200 mb-4 rounded flex items-center justify-center text-gray-500">
