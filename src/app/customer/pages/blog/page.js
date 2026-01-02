@@ -70,10 +70,10 @@ export default function Blog() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 to-white min-h-screen">
+    <div className="bg-white min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white py-16 md:py-24">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
               Our Blog
@@ -85,7 +85,7 @@ export default function Blog() {
         </div>
       </div>
 
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {loading ? (
           <>
             {/* Featured Post Shimmer */}
@@ -117,10 +117,10 @@ export default function Blog() {
           <>
             {/* Featured Post */}
             {featuredPost && (
-          <div className="mb-16">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-              <div className="md:flex">
-                <div className="md:w-1/2 relative h-64 md:h-96">
+              <div className="mb-12 md:mb-16">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+                  <div className="md:flex">
+                    <div className="md:w-1/2 relative h-64 md:h-96 overflow-hidden">
                   <Image
                     width={800}
                     height={600}
@@ -174,45 +174,46 @@ export default function Blog() {
                     <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Blog Slider */}
-        {!loading && blogs.length > 0 && (
-          <div className="mb-16">
-            <BlogCategorySlider category="Perfume" blogs={blogs} />
-          </div>
-        )}
+            {/* Blog Slider */}
+            {!loading && blogs.length > 0 && (
+              <div className="mb-12 md:mb-16">
+                <BlogCategorySlider category="Perfume" blogs={blogs} />
+              </div>
+            )}
 
-        {/* Blog Posts Section */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Latest Articles
-            </h2>
-            <div className="hidden md:block text-gray-600">
-              {blogs.length} articles
+            {/* Blog Posts Section */}
+            <div className="mb-12">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
+                  Latest Articles
+                </h2>
+                <div className="text-gray-600 text-sm md:text-base">
+                  {blogs.length} {blogs.length === 1 ? 'article' : 'articles'}
+                </div>
+              </div>
+              <BlogPosts 
+                blogs={blogs.slice(0, visibleBlogs)} 
+                calculateReadingTime={calculateReadingTime}
+                formatDate={formatDate}
+              />
             </div>
-          </div>
-          <BlogPosts 
-            blogs={blogs.slice(0, visibleBlogs)} 
-            calculateReadingTime={calculateReadingTime}
-            formatDate={formatDate}
-          />
-        </div>
 
             {/* Show More Button */}
             {visibleBlogs < blogs.length && (
-              <div className="text-center mt-12">
+              <div className="text-center mt-8 md:mt-12">
                 <button
                   onClick={showMoreBlogs}
-                  className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full overflow-hidden transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg hover:scale-105"
+                  className="group relative inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full overflow-hidden transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg hover:scale-105"
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     Load More Articles
-                    <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <FiArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </button>
@@ -224,14 +225,15 @@ export default function Blog() {
 
       {/* Blog Section & Subscribe */}
       {!loading && blogs.length > 0 && (
-        <div className="bg-gray-50 py-16 mt-12">
-          <div className="container mx-auto px-4">
-            <BlogSection blogs={blogs} title="Perfume" />
+        <>
+          <div className="bg-gray-50 py-12 md:py-16 mt-8 md:mt-12">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <BlogSection blogs={blogs} title="Perfume" />
+            </div>
           </div>
-        </div>
+          <Subscribe />
+        </>
       )}
-      
-      {!loading && <Subscribe />}
     </div>
   );
 }

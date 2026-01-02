@@ -39,18 +39,20 @@ export default function BlogCategorySlider({ category, blogs }) {
         <div className="relative flex items-center col-span-1 lg:col-span-2">
           <button
             onClick={handlePrevious}
-            className="text-white p-2 absolute z-50 bg-yellow-400 left-5 rounded-full hover:scale-110 transition duration-300"
+            className="text-white p-3 absolute z-50 bg-yellow-400 left-2 rounded-full hover:scale-110 transition duration-300 shadow-lg"
+            aria-label="Previous blog"
           >
             &#10094;
           </button>
           <button
             onClick={handleNext}
-            className="text-white p-2 absolute z-50 bg-yellow-400 right-5 rounded-full hover:scale-110 transition duration-300"
+            className="text-white p-3 absolute z-50 bg-yellow-400 right-2 rounded-full hover:scale-110 transition duration-300 shadow-lg"
+            aria-label="Next blog"
           >
             &#10095;
           </button>
 
-          <div className="relative w-full overflow-hidden rounded-lg shadow-xl">
+          <div className="relative w-full overflow-hidden rounded-lg shadow-xl bg-gray-100">
             <div
               className="flex transition-transform duration-700 ease-in-out"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
