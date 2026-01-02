@@ -2,6 +2,7 @@
 
 import ProductPage from './product';
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 
 /**
  * Fetches product data from the API
@@ -14,13 +15,17 @@ async function getProductData(slug) {
   }
 
   try {
-    // Decode and encode the slug to handle special characters properly
+    // Decode the slug to handle special characters properly
     const decodedSlug = decodeURIComponent(slug);
-    const encodedSlug = encodeURIComponent(decodedSlug);
     
-    // In Next.js App Router, relative URLs work for server components
-    // They are automatically resolved to the current request's origin
-    const apiUrl = `/api/products/${encodedSlug}`;
+    // Get the host from headers for server-side fetch
+    const headersList = headers();
+    const host = headersList.get('host') || 'localhost:3000';
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || `${protocol}://${host}`;
+    
+    // Build the API URL - use the decoded slug directly (Next.js will handle encoding)
+    const apiUrl = `${baseUrl}/api/products/${decodedSlug}`;
     
     // Use ISR (Incremental Static Regeneration) for better performance
     const res = await fetch(apiUrl, { 
