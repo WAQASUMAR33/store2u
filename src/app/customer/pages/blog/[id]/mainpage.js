@@ -129,6 +129,7 @@ const BlogDetailPage = ({ id }) => {
           className="w-full h-full object-cover"
           priority
           sizes="100vw"
+          unoptimized
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
         <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-white">

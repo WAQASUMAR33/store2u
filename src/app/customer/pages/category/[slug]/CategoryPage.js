@@ -159,6 +159,7 @@ const CategoryPage = ({ categoryData }) => {
                   src={getImageUrl(subcategory.imageUrl)}
                   alt={subcategory.name || 'Subcategory image'}
                   className="w-full h-40 object-cover mb-2 rounded"
+                  unoptimized
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = '/placeholder-image.png';

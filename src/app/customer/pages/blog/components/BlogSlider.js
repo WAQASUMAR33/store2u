@@ -71,6 +71,7 @@ export default function BlogCategorySlider({ category, blogs }) {
                         src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${blog.image}`}
                         alt={blog.title}
                         className="w-full h-full object-cover"
+                        unoptimized
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white p-4">
                         <h3 className="text-lg font-semibold line-clamp-2">{blog.title}</h3>
@@ -101,6 +102,7 @@ export default function BlogCategorySlider({ category, blogs }) {
                     src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${blog.image}`}
                     alt={blog.title}
                     className="w-full h-20 object-cover rounded-lg"
+                    unoptimized
                   />
                 </div>
                 <div className="w-2/3 min-w-0">

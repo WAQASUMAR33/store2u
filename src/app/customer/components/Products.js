@@ -174,6 +174,7 @@ const Products = () => {
                         className="w-full h-[220px] md:h-[320px] shadow-md object-cover cursor-pointer"
                         loading="lazy"
                         sizes="(max-width: 768px) 50vw, 33vw"
+                        unoptimized
                       />
                     ) : (
                       <div className="w-full h-[220px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 cursor-pointer">
@@ -216,6 +217,7 @@ const Products = () => {
                                   className="h-[220px] w-full object-contain"
                                   loading="lazy"
                                   sizes="(max-width: 640px) 50vw, 25vw"
+                                  unoptimized
                                 />
                               </motion.div>
                             ) : (

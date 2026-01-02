@@ -129,6 +129,7 @@ export default function Blog() {
                         className="w-full h-full object-cover"
                         priority
                         sizes="(max-width: 768px) 100vw, 50vw"
+                        unoptimized
                       />
                       <div className="absolute top-4 left-4">
                         <span className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
@@ -264,6 +265,7 @@ function BlogPosts({ blogs, calculateReadingTime, formatDate }) {
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 loading="lazy"
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                unoptimized
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
