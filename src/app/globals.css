@@ -1,4 +1,4 @@
-/* Add shimmer animation if globals.css exists, otherwise we'll add it inline */
+/* Shimmer loading animation */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
