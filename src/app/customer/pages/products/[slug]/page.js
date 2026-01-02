@@ -18,10 +18,23 @@ async function getProductData(slug) {
     // Decode the slug to handle special characters properly
     const decodedSlug = decodeURIComponent(slug);
     
-    // Get the host from headers for server-side fetch (Next.js 15+)
+    // Get headers for server-side fetch (Next.js 15+)
     const headersList = await headers();
-    const host = headersList.get('host') || 'localhost:3000';
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    
+    // Get host - check x-forwarded-host first (Vercel/proxy), then host
+    const forwardedHost = headersList.get('x-forwarded-host');
+    const host = forwardedHost || headersList.get('host') || 'localhost:3000';
+    
+    // Get protocol - check x-forwarded-proto first (Vercel/proxy), then determine from env
+    const forwardedProto = headersList.get('x-forwarded-proto');
+    let protocol = 'http';
+    if (forwardedProto) {
+      protocol = forwardedProto.split(',')[0].trim(); // Take first protocol if multiple
+    } else if (process.env.NODE_ENV === 'production' || host.includes('store2u.ca')) {
+      protocol = 'https';
+    }
+    
+    // Construct base URL - prefer NEXT_PUBLIC_API_URL if set, otherwise build from headers
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || `${protocol}://${host}`;
     
     // Build the API URL - use the decoded slug directly
@@ -40,7 +53,7 @@ async function getProductData(slug) {
         return null;
       }
       // Log error for debugging
-      console.error(`Failed to fetch product: ${res.status} - ${res.statusText}`);
+      console.error(`Failed to fetch product: ${res.status} - ${res.statusText} - URL: ${apiUrl}`);
       return null;
     }
 
@@ -54,7 +67,7 @@ async function getProductData(slug) {
     return data.data;
   } catch (error) {
     // Log errors for debugging
-    console.error('Error fetching product data:', error.message);
+    console.error('Error fetching product data:', error.message, error.stack);
     return null;
   }
 }
