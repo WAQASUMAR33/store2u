@@ -14,9 +14,13 @@ async function getProductData(slug) {
   }
 
   try {
+    // Decode and encode the slug to handle special characters properly
+    const decodedSlug = decodeURIComponent(slug);
+    const encodedSlug = encodeURIComponent(decodedSlug);
+    
     // In Next.js App Router, relative URLs work for server components
     // They are automatically resolved to the current request's origin
-    const apiUrl = `/api/products/${slug}`;
+    const apiUrl = `/api/products/${encodedSlug}`;
     
     // Use ISR (Incremental Static Regeneration) for better performance
     const res = await fetch(apiUrl, { 

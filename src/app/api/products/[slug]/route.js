@@ -81,9 +81,12 @@ export async function GET(request, { params }) {
   const { slug } = await params; // Use slug parameter
 
   try {
+    // Decode the slug to handle special characters (like apostrophes)
+    const decodedSlug = decodeURIComponent(slug);
+    
     // Fetch the product by slug
     const product = await prisma.product.findUnique({
-      where: { slug },
+      where: { slug: decodedSlug },
       include: {
         images: true,
         subcategory: {
