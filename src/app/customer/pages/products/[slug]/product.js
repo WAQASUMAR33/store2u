@@ -820,6 +820,7 @@ const ProductPage = ({ productData }) => {
             calculateOriginalPrice={calculateOriginalPrice}
             formatPrice={formatPrice}
             getImageUrl={getImageUrl}
+            shouldUnoptimize={shouldUnoptimize}
             router={router}
           />
         )}
