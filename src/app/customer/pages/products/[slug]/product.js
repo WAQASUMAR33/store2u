@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo, useCallback, memo, Suspense } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, memo } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
@@ -698,10 +698,8 @@ const ProductPage = ({ productData }) => {
             aria-label="Product description"
           />
 
-          {/* Customer Reviews - Lazy Loaded */}
-          <Suspense fallback={<div className="mt-8"><p className="text-gray-500">Loading reviews...</p></div>}>
-            <ReviewsSection reviews={reviews} />
-          </Suspense>
+          {/* Customer Reviews */}
+          <ReviewsSection reviews={reviews} />
 
 
             <div className="mt-8">
@@ -763,30 +761,20 @@ const ProductPage = ({ productData }) => {
         </div>
       </div>
 
-      {/* Related Products Section - Lazy Loaded */}
+      {/* Related Products Section */}
       {relatedProducts.length > 0 && (
-        <Suspense fallback={
-          <div className="mt-12 mb-8">
-            <h3 className="text-2xl font-semibold mb-6">Related Products</h3>
-            <div className="flex justify-center py-8">
-              <ThreeDots height="40" width="40" radius="9" color="#3498db" ariaLabel="loading" visible={true} />
-            </div>
-          </div>
-        }>
-          <RelatedProductsSection 
-            relatedProducts={relatedProducts}
-            calculateOriginalPrice={calculateOriginalPrice}
-            formatPrice={formatPrice}
-            getImageUrl={getImageUrl}
-            router={router}
-          />
-        </Suspense>
+        <RelatedProductsSection 
+          relatedProducts={relatedProducts}
+          calculateOriginalPrice={calculateOriginalPrice}
+          formatPrice={formatPrice}
+          getImageUrl={getImageUrl}
+          router={router}
+        />
       )}
 
-      {/* Modal for Related Products - Lazy Loaded */}
+      {/* Modal for Related Products */}
       {isModalOpen && (
-        <Suspense fallback={null}>
-          <Modal
+        <Modal
             isOpen={isModalOpen}
             onRequestClose={handleCloseModal}
             contentLabel="Related Products"
@@ -876,7 +864,6 @@ const ProductPage = ({ productData }) => {
               </button>
             </div>
           </Modal>
-        </Suspense>
       )}
     </div>
   );
