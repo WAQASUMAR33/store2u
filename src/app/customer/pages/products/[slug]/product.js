@@ -150,7 +150,8 @@ const ProductPage = ({ productData }) => {
     const timeoutId = setTimeout(() => {
       const fetchReviews = async () => {
         try {
-          const response = await axios.get(`/api/getreviews?productId=${product.id}`);
+          if (!product?.id) return;
+        const response = await axios.get(`/api/getreviews?productId=${product.id}`);
           if (response.data?.reviews) {
             setReviews(Array.isArray(response.data.reviews) ? response.data.reviews : []);
           }
@@ -190,7 +191,7 @@ const ProductPage = ({ productData }) => {
     try {
       setReviewLoading(true);
       const response = await axios.post('/api/reviews', {
-        productId: product.id,
+        productId: product?.id || null,
         reviewer: userName,
         rating: Number(rating),
         comment: comment.trim(),
@@ -311,7 +312,7 @@ const ProductPage = ({ productData }) => {
 
     if (existingItemIndex !== -1) {
       const newQuantity = updatedCart[existingItemIndex].quantity + cartItem.quantity;
-      if (newQuantity > product.stock) {
+      if (product?.stock && newQuantity > product.stock) {
         toast.error(`Cannot add more. Only ${product.stock} items available in stock.`);
         return;
       }
