@@ -32,6 +32,7 @@ const ProductPage = ({ productData }) => {
   // State management
   const [product, setProduct] = useState(productData?.product || null);
   const [relatedProducts, setRelatedProducts] = useState(productData?.relatedProducts || []);
+  const [error, setError] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -92,22 +93,31 @@ const ProductPage = ({ productData }) => {
     }
   }, [productLink]);
 
-  // Fetch product details and related products - optimized to only fetch if data is missing
+  // Initialize product data from props
   useEffect(() => {
-    if (!product?.slug || (productData?.product && productData?.relatedProducts)) {
-      // Use initial data if available, only fetch if needed
-      if (productData?.product) {
-        setProduct(productData.product);
-        setRelatedProducts(productData.relatedProducts || []);
-        if (productData.colors) setColors(Array.isArray(productData.colors) ? productData.colors : []);
-        if (productData.sizes) setSizes(Array.isArray(productData.sizes) ? productData.sizes : []);
-      }
+    if (productData?.product) {
+      setProduct(productData.product);
+      setRelatedProducts(productData.relatedProducts || []);
+      if (productData.colors) setColors(Array.isArray(productData.colors) ? productData.colors : []);
+      if (productData.sizes) setSizes(Array.isArray(productData.sizes) ? productData.sizes : []);
+      setError(null);
+    } else if (!productData) {
+      // If no productData is provided, try to fetch it
+      setError('Product data not available');
+    }
+  }, [productData]);
+
+  // Fetch product details if slug is available but product data is missing
+  useEffect(() => {
+    // Only fetch if we have a slug but no product data
+    if (!product?.slug || productData?.product) {
       return;
     }
 
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await axios.get(`/api/products/${product.slug}`);
         const fetchedData = response.data;
         
@@ -117,19 +127,20 @@ const ProductPage = ({ productData }) => {
           setColors(Array.isArray(colors) ? colors : []);
           setProduct(fetchedProduct);
           setRelatedProducts(Array.isArray(relatedProducts) ? relatedProducts : []);
+        } else {
+          setError('Product not found');
         }
       } catch (error) {
+        setError('Failed to load product details. Please try again.');
         toast.error('Failed to load product details. Please try again.');
-        if (process.env.NODE_ENV === 'development') {
-          console.error('Error fetching product:', error);
-        }
+        console.error('Error fetching product:', error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProduct();
-  }, [product?.slug, productData]);
+  }, [product?.slug]);
 
   // Fetch reviews for the product - lazy load after initial render
   useEffect(() => {
@@ -398,12 +409,12 @@ const ProductPage = ({ productData }) => {
   }, [product?.stock]);
 
 
-  // Early return if no product
-  if (!product) {
+  // Early return if error or no product
+  if (error || (!product && !loading)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <p className="text-xl text-gray-600 mb-4">Product not found</p>
+          <p className="text-xl text-gray-600 mb-4">{error || 'Product not found'}</p>
           <button
             onClick={() => router.push('/')}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"

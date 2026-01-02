@@ -14,12 +14,11 @@ async function getProductData(slug) {
   }
 
   try {
-    // Use relative URL for better compatibility
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
-    const apiUrl = baseUrl ? `${baseUrl}/api/products/${slug}` : `/api/products/${slug}`;
+    // In Next.js App Router, relative URLs work for server components
+    // They are automatically resolved to the current request's origin
+    const apiUrl = `/api/products/${slug}`;
     
     // Use ISR (Incremental Static Regeneration) for better performance
-    // Revalidate every 60 seconds, but serve stale content immediately
     const res = await fetch(apiUrl, { 
       next: { revalidate: 60 }, // Cache for 60 seconds
       headers: {
@@ -31,21 +30,22 @@ async function getProductData(slug) {
       if (res.status === 404) {
         return null;
       }
-      throw new Error(`Failed to fetch product: ${res.status}`);
+      // Log error for debugging
+      console.error(`Failed to fetch product: ${res.status} - ${res.statusText}`);
+      return null;
     }
 
     const data = await res.json();
     
     if (!data?.data) {
+      console.error('Product data structure is invalid:', data);
       return null;
     }
 
     return data.data;
   } catch (error) {
-    // Only log errors in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching product data:', error);
-    }
+    // Log errors for debugging
+    console.error('Error fetching product data:', error.message);
     return null;
   }
 }
