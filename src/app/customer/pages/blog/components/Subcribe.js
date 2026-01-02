@@ -27,8 +27,8 @@ export default function Subscribe() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white py-16 md:py-20 px-4">
-      <div className="container mx-auto max-w-4xl">
+    <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white py-16 md:py-20 px-4 mt-12">
+      <div className="container mx-auto max-w-4xl px-4">
         <div className="text-center mb-10">
           <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full p-4 mb-6">
             <FiMail className="w-12 h-12 text-white" />

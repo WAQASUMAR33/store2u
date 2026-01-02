@@ -180,7 +180,7 @@ export default function Blog() {
         )}
 
         {/* Blog Slider */}
-        {blogs.length > 0 && (
+        {!loading && blogs.length > 0 && (
           <div className="mb-16">
             <BlogCategorySlider category="Perfume" blogs={blogs} />
           </div>
@@ -223,13 +223,15 @@ export default function Blog() {
       </main>
 
       {/* Blog Section & Subscribe */}
-      <div className="bg-gray-50 py-16">
-        <div className="container mx-auto px-4">
-          <BlogSection blogs={blogs} title="Perfume" />
+      {!loading && blogs.length > 0 && (
+        <div className="bg-gray-50 py-16 mt-12">
+          <div className="container mx-auto px-4">
+            <BlogSection blogs={blogs} title="Perfume" />
+          </div>
         </div>
-      </div>
+      )}
       
-      <Subscribe />
+      {!loading && <Subscribe />}
     </div>
   );
 }
