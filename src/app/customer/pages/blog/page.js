@@ -121,66 +121,66 @@ export default function Blog() {
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
                   <div className="md:flex">
                     <div className="md:w-1/2 relative h-64 md:h-96 overflow-hidden">
-                  <Image
-                    width={800}
-                    height={600}
-                    src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${featuredPost.image}`}
-                    alt={featuredPost.title || "Featured Blog Image"}
-                    className="w-full h-full object-cover"
-                    priority
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                      Featured
-                    </span>
-                  </div>
-                </div>
-                <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                  <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
-                    <div className="flex items-center gap-1">
-                      <FiTag className="w-4 h-4" />
-                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">
-                        {featuredPost.category || 'Uncategorized'}
-                      </span>
+                      <Image
+                        width={800}
+                        height={600}
+                        src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${featuredPost.image}`}
+                        alt={featuredPost.title || "Featured Blog Image"}
+                        className="w-full h-full object-cover"
+                        priority
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                          Featured
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <FiCalendar className="w-4 h-4" />
-                      <span>{formatDate(featuredPost.createdAt)}</span>
+                    <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                      <div className="flex items-center gap-4 mb-4 text-sm text-gray-600 flex-wrap">
+                        <div className="flex items-center gap-1">
+                          <FiTag className="w-4 h-4" />
+                          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">
+                            {featuredPost.category || 'Uncategorized'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <FiCalendar className="w-4 h-4" />
+                          <span>{formatDate(featuredPost.createdAt)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <FiClock className="w-4 h-4" />
+                          <span>{calculateReadingTime(featuredPost.description)} min read</span>
+                        </div>
+                      </div>
+                      <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 line-clamp-2">
+                        {featuredPost.title}
+                      </h2>
+                      <div
+                        className="text-gray-600 mb-6 line-clamp-3"
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                        dangerouslySetInnerHTML={{ __html: featuredPost.description }}
+                      />
+                      <Link
+                        href={`/customer/pages/blog/${featuredPost.id}`}
+                        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold group"
+                      >
+                        Read Full Article
+                        <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </Link>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <FiClock className="w-4 h-4" />
-                      <span>{calculateReadingTime(featuredPost.description)} min read</span>
-                    </div>
-                  </div>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 line-clamp-2">
-                    {featuredPost.title}
-                  </h2>
-                  <div
-                    className="text-gray-600 mb-6 line-clamp-3"
-                    style={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                    dangerouslySetInnerHTML={{ __html: featuredPost.description }}
-                  />
-                  <Link
-                    href={`/customer/pages/blog/${featuredPost.id}`}
-                    className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-semibold group"
-                  >
-                    Read Full Article
-                    <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
                   </div>
                 </div>
               </div>
             )}
 
             {/* Blog Slider */}
-            {!loading && blogs.length > 0 && (
+            {blogs.length > 0 && (
               <div className="mb-12 md:mb-16">
                 <BlogCategorySlider category="Perfume" blogs={blogs} />
               </div>
