@@ -385,6 +385,11 @@ const ProductPage = ({ productData }) => {
     return baseUrl ? `${baseUrl}/${url}` : url;
   }, []);
 
+  // Handle image loading errors
+  const handleImageError = useCallback((e) => {
+    e.target.src = '/placeholder-image.png';
+  }, []);
+
   const handleThumbnailClick = useCallback((index) => {
     if (product?.images && index >= 0 && index < product.images.length) {
       setCurrentImageIndex(index);
@@ -494,6 +499,8 @@ const ProductPage = ({ productData }) => {
                     onClick={() => handleThumbnailClick(index)}
                     loading={index < 3 ? 'eager' : 'lazy'}
                     sizes="80px"
+                    unoptimized={image?.url?.startsWith('https://data.tascpa.ca')}
+                    onError={handleImageError}
                   />
                 ))}
             </div>
@@ -516,6 +523,8 @@ const ProductPage = ({ productData }) => {
                     priority
                     sizes="(max-width: 768px) 100vw, 60vw"
                     quality={90}
+                    unoptimized={product.images[currentImageIndex]?.url?.startsWith('https://data.tascpa.ca')}
+                    onError={handleImageError}
                   />
                 </motion.div>
               ) : (
@@ -571,9 +580,11 @@ const ProductPage = ({ productData }) => {
                           <Image
                             width={1000}
                             height={1000}
-                            src={getImageUrl(product.images[0].url)} 
+                            src={getImageUrl(product.images[0]?.url)} 
                             className='md:w-[5rem] md:h-[5rem] w-[8rem] h-[8rem]'
                             alt={product?.name || 'Product'}
+                            unoptimized={product.images[0]?.url?.startsWith('https://data.tascpa.ca')}
+                            onError={handleImageError}
                           />
                         ) : (
                           <div className='md:w-[5rem] md:h-[5rem] w-[8rem] h-[8rem] bg-gray-200 rounded'></div>

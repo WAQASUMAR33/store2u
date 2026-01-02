@@ -12,6 +12,10 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
+    // Increase timeout for external images
+    dangerouslyAllowSVG: false,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
   // Compression
@@ -21,9 +25,10 @@ const nextConfig = {
   swcMinify: true,
   
   // Experimental features for performance
-  experimental: {
-    optimizeCss: true,
-  },
+  // Disabled optimizeCss as it requires 'critters' package and can cause build issues
+  // experimental: {
+  //   optimizeCss: true,
+  // },
   
   // Headers for caching
   async headers() {
