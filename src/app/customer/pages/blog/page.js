@@ -20,13 +20,23 @@ export default function Blog() {
       try {
         setLoading(true);
         const response = await fetch('/api/blog');
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch blogs: ${response.status}`);
+        }
+        
         const data = await response.json();
-        setBlogs(data);
-        if (data.length > 0) {
-          setFeaturedPost(data[0]);
+        
+        // Handle different response formats
+        const blogsArray = Array.isArray(data) ? data : (data.data || []);
+        
+        setBlogs(blogsArray);
+        if (blogsArray.length > 0) {
+          setFeaturedPost(blogsArray[0]);
         }
       } catch (error) {
         console.error('Error fetching blogs:', error);
+        setBlogs([]); // Set empty array on error
       } finally {
         setLoading(false);
       }

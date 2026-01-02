@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 
 export default function BlogCategorySlider({ category, blogs }) {
@@ -60,7 +61,7 @@ export default function BlogCategorySlider({ category, blogs }) {
                   className="w-full flex-shrink-0"
                   style={{ flexBasis: '100%' }}
                 >
-                  <a href={`/customer/pages/blog/${blog.id}`}>
+                  <Link href={`/customer/pages/blog/${blog.id}`}>
                     <div className="relative w-full h-64 sm:h-80 lg:h-[700px]">
                       <Image
                         width={1000}
@@ -73,7 +74,7 @@ export default function BlogCategorySlider({ category, blogs }) {
                         <h3 className="text-lg font-semibold">{blog.title}</h3>
                       </div>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -97,10 +98,10 @@ export default function BlogCategorySlider({ category, blogs }) {
                   />
                 </div>
                 <div className="w-2/3">
-                  <a href={`/customer/pages/blog/${blog.id}`}>
+                  <Link href={`/customer/pages/blog/${blog.id}`}>
                     <h4 className="text-md font-bold text-gray-700">{blog.title}</h4>
                     <p className="text-sm text-gray-500 truncate">{blog.description}</p>
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}
