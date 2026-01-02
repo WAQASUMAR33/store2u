@@ -7,6 +7,7 @@ import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { ThreeDots } from 'react-loader-spinner';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { ProductCardShimmer, GridShimmer } from './Shimmer';
 
 const Products = () => {
   const [categories, setCategories] = useState([]);
@@ -106,16 +107,19 @@ const Products = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <ThreeDots
-          height="80"
-          width="80"
-          radius="9"
-          color="#3498db"
-          ariaLabel="three-dots-loading"
-          visible={true}
-        />
-      </div>
+      <section className="py-8 bg-white">
+        <div className="container mx-auto">
+          <div className="mb-4">
+            <div className="h-8 w-64 bg-gray-200 rounded animate-pulse mx-auto"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-4 items-start">
+            <div className="h-[320px] bg-gray-200 rounded-lg animate-pulse"></div>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-0 sm:grid-cols-2 md:grid-cols-4">
+              <GridShimmer ItemComponent={ProductCardShimmer} count={4} className="grid grid-cols-2 gap-x-4 gap-y-0 sm:grid-cols-2 md:grid-cols-4 w-full" />
+            </div>
+          </div>
+        </div>
+      </section>
     );
   }
 

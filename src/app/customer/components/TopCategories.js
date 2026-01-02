@@ -5,14 +5,17 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { GridShimmer, CategoryCardShimmer } from './Shimmer';
 
 const TopCategories = () => {
   const [categories, setCategories] = useState([]); // Ensure it's initialized as an array
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        setLoading(true);
         const response = await axios.get('/api/categories'); // Replace with your actual API endpoint
         console.log('Fetched Categories:', response.data); // Debugging line
 
@@ -21,6 +24,8 @@ const TopCategories = () => {
       } catch (error) {
         console.error('Error fetching categories:', error);
         setCategories([]); // Set categories as an empty array if error occurs
+      } finally {
+        setLoading(false);
       }
     };
     fetchCategories();
@@ -39,7 +44,13 @@ const TopCategories = () => {
     <div className="container mx-auto py-8 bg-white text-center"> {/* Centered container */}
       <h2 className="text-2xl font-semibold mb-6">Categories</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 justify-center">    {/* 6 categories in a row on large screens */}
-        {Array.isArray(categories) && categories.length > 0 ? (
+        {loading ? (
+          <GridShimmer 
+            ItemComponent={CategoryCardShimmer} 
+            count={6}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 w-full col-span-full"
+          />
+        ) : Array.isArray(categories) && categories.length > 0 ? (
           categories.map((category, index) => (
             <motion.div
               key={category.slug} // Use slug as the key

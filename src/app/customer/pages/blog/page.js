@@ -7,15 +7,18 @@ import { FiCalendar, FiClock, FiArrowRight, FiTag } from 'react-icons/fi';
 import BlogCategorySlider from './components/BlogSlider';
 import Subscribe from './components/Subcribe';
 import BlogSection from './components/Blogsection';
+import { BlogCardShimmer, GridShimmer } from '../../components/Shimmer';
 
 export default function Blog() {
   const [featuredPost, setFeaturedPost] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [visibleBlogs, setVisibleBlogs] = useState(6);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
+        setLoading(true);
         const response = await fetch('/api/blog');
         const data = await response.json();
         setBlogs(data);
@@ -24,6 +27,8 @@ export default function Blog() {
         }
       } catch (error) {
         console.error('Error fetching blogs:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -71,8 +76,37 @@ export default function Blog() {
       </div>
 
       <main className="container mx-auto px-4 py-12">
-        {/* Featured Post */}
-        {featuredPost && (
+        {loading ? (
+          <>
+            {/* Featured Post Shimmer */}
+            <div className="mb-16">
+              <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div className="md:flex">
+                  <div className="md:w-1/2 h-64 md:h-96 bg-gray-200 animate-pulse"></div>
+                  <div className="md:w-1/2 p-8 md:p-12 space-y-4">
+                    <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-8 w-3/4 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-4 w-5/6 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Blog Posts Shimmer */}
+            <div className="mb-12">
+              <div className="h-8 w-48 bg-gray-200 rounded animate-pulse mb-8"></div>
+              <GridShimmer 
+                ItemComponent={BlogCardShimmer} 
+                count={6}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Featured Post */}
+            {featuredPost && (
           <div className="mb-16">
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
               <div className="md:flex">
@@ -159,20 +193,22 @@ export default function Blog() {
           />
         </div>
 
-        {/* Show More Button */}
-        {visibleBlogs < blogs.length && (
-          <div className="text-center mt-12">
-            <button
-              onClick={showMoreBlogs}
-              className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full overflow-hidden transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg hover:scale-105"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Load More Articles
-                <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </button>
-          </div>
+            {/* Show More Button */}
+            {visibleBlogs < blogs.length && (
+              <div className="text-center mt-12">
+                <button
+                  onClick={showMoreBlogs}
+                  className="group relative inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full overflow-hidden transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg hover:scale-105"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Load More Articles
+                    <FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </button>
+              </div>
+            )}
+          </>
         )}
       </main>
 

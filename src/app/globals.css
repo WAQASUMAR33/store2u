@@ -1,54 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Add shimmer animation if globals.css exists, otherwise we'll add it inline */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
   }
-}
-.modal-overlay {
-  z-index: 9999 !important;
-}
-
-.modal-content {
-  z-index: 10000 !important;
-}
-.modal-overlay {
-  display: block !important;
-  visibility: visible !important;
-}
-
-.modal-content {
-  display: block !important;
-  visibility: visible !important;
-}
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-  overflow-x: scroll;
-  scroll-behavior: smooth;
-  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
-  scrollbar-width: none; /* Hide scrollbar in Firefox */
-}
-
-.products-grid::-webkit-scrollbar {
-  display: none; /* Hide scrollbar in Chrome, Safari, and Opera */
+  100% {
+    background-position: 200% 0;
+  }
 }

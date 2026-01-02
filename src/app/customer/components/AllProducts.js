@@ -6,6 +6,7 @@ import { ThreeDots } from 'react-loader-spinner';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../store/cartSlice';
 import Image from 'next/image';
+import { GridShimmer, ProductCardShimmer } from '../components/Shimmer';
 
 const TopRatedProducts = () => {
   const [products, setProducts] = useState([]);
@@ -54,14 +55,12 @@ const TopRatedProducts = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <ThreeDots
-          height="80"
-          width="80"
-          radius="9"
-          color="#3498db"
-          ariaLabel="three-dots-loading"
-          visible={true}
+      <div className="container mx-auto px-4 py-8">
+        <div className="h-8 w-64 bg-gray-200 rounded animate-pulse mb-6"></div>
+        <GridShimmer 
+          ItemComponent={ProductCardShimmer} 
+          count={12}
+          className="grid grid-cols-2 gap-x-2 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
         />
       </div>
     );
