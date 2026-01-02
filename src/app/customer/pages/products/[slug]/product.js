@@ -864,7 +864,6 @@ const ProductPage = ({ productData }) => {
             </div>
           </Modal>
         )}
-      </div>
     </div>
   );
 };
