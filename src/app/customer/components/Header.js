@@ -220,6 +220,7 @@ useEffect(() => {
               src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${companyHeaderImage}`}
               alt="Logo"
               className="h-10 w-36 cursor-pointer object-contain"
+              unoptimized
             />
             
           </Link>
@@ -271,6 +272,7 @@ useEffect(() => {
                             src={`${process.env.NEXT_PUBLIC_UPLOADED_IMAGE_URL}/${category.imageUrl}`}
                             alt={category.name}
                             className="w-8 h-8 object-cover rounded-full"
+                            unoptimized
                           />
                         )}
                         {/* Category Name */}
