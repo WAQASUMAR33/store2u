@@ -18,13 +18,13 @@ async function getProductData(slug) {
     // Decode the slug to handle special characters properly
     const decodedSlug = decodeURIComponent(slug);
     
-    // Get the host from headers for server-side fetch
-    const headersList = headers();
+    // Get the host from headers for server-side fetch (Next.js 15+)
+    const headersList = await headers();
     const host = headersList.get('host') || 'localhost:3000';
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || `${protocol}://${host}`;
     
-    // Build the API URL - use the decoded slug directly (Next.js will handle encoding)
+    // Build the API URL - use the decoded slug directly
     const apiUrl = `${baseUrl}/api/products/${decodedSlug}`;
     
     // Use ISR (Incremental Static Regeneration) for better performance
