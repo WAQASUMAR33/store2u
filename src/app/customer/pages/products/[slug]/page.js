@@ -103,19 +103,24 @@ export async function generateMetadata({ params }) {
  * Server component that fetches product data and renders the client component
  */
 const ProductDetailsPage = async ({ params }) => {
-  const { slug } = await params;
+  try {
+    const { slug } = await params;
 
-  if (!slug) {
+    if (!slug) {
+      return notFound();
+    }
+
+    const productData = await getProductData(slug);
+
+    if (!productData?.product) {
+      return notFound();
+    }
+
+    return <ProductPage productData={productData} />;
+  } catch (error) {
+    console.error('Error in ProductDetailsPage:', error);
     return notFound();
   }
-
-  const productData = await getProductData(slug);
-
-  if (!productData?.product) {
-    return notFound();
-  }
-
-  return <ProductPage productData={productData} />;
 };
 
 export default ProductDetailsPage;
